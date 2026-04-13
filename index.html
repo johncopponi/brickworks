@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>FBW Multi-Family — Rev 02 Baseline | Swimlane Schedule</title>
+<title>Frederick Brickworks — Overall + Multi-Family Rev 02 | Integrated Schedule</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap');
 
@@ -17,6 +17,7 @@
   --muted: #5a6080;
   --dim:   #2e334a;
 
+  /* MF building lanes (existing) */
   --c-site:    #34d399;
   --c-garage:  #f87171;
   --c-podium:  #a78bfa;
@@ -26,78 +27,73 @@
   --c-ext:     #94a3b8;
   --c-crit:    #f87171;
 
+  /* Overall schedule lanes (new) */
+  --c-infra:   #4ade80;
+  --c-retail:  #fb923c;
+  --c-grocer:  #e879f9;
+  --c-owner:   #67e8f9;
+  --c-preconstruct: #a3a3a3;
+
   --hdr-h: 34px;
   --hdr-w: 156px;
-  --mo-w:  152px;
-  --act-h: 44px;
-  --rpad:  6px;
+  --mo-w:  138px;
 }
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-/* ── Top bar ── */
+/* ── Topbar ── */
 .topbar {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 8px 18px;
-  background: var(--bg2);
-  border-bottom: 1px solid var(--line2);
-  flex-shrink: 0;
-  flex-wrap: wrap;
+  display: flex; align-items: center; gap: 16px;
+  padding: 0 16px; height: 48px; flex-shrink: 0;
+  background: var(--bg2); border-bottom: 1px solid var(--line2);
+  position: sticky; top: 0; z-index: 100;
 }
-.tb-left { display: flex; flex-direction: column; gap: 2px; }
-.tb-title { font-size: 13px; font-weight: 600; letter-spacing: .02em; }
-.tb-sub   { font-size: 10px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
-
-.legend { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; flex: 1; }
+.tb-left { flex: 1; min-width: 0; }
+.tb-title { font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tb-sub { font-size: 9.5px; color: var(--muted); font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
+.legend { display: flex; gap: 10px; flex-shrink: 0; align-items: center; flex-wrap: wrap; }
 .li { display: flex; align-items: center; gap: 4px; font-size: 10px; color: var(--muted); white-space: nowrap; }
-.ld { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+.ld { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.ctrls { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+.btn { background: var(--bg3); border: 1px solid var(--line2); color: var(--muted); border-radius: 4px; padding: 3px 8px; font-size: 10px; cursor: pointer; font-family: 'JetBrains Mono', monospace; }
+.btn:hover { border-color: rgba(255,255,255,.22); color: var(--text); }
+.btn.on { background: rgba(255,255,255,.08); color: var(--text); }
+.zlbl { font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--muted); min-width: 32px; text-align: center; }
 
-.ctrls { display: flex; gap: 5px; align-items: center; flex-shrink: 0; }
-.btn {
-  background: var(--bg4); border: 1px solid var(--line2); color: var(--muted);
-  padding: 3px 10px; border-radius: 4px; cursor: pointer;
-  font-size: 10px; font-family: 'JetBrains Mono', monospace;
-  transition: all .12s; white-space: nowrap;
-}
-.btn:hover { background: var(--line2); color: var(--text); }
-.btn.on   { background: rgba(248,113,113,.15); border-color: rgba(248,113,113,.4); color: var(--c-crit); }
-.zlbl { font-size: 10px; color: var(--muted); font-family: 'JetBrains Mono', monospace; min-width: 36px; text-align: center; }
-
-/* ── Filter row ── */
+/* ── Filter bar ── */
 .filterbar {
-  display: flex; gap: 5px; padding: 5px 18px;
-  background: var(--bg2); border-bottom: 1px solid var(--line);
-  flex-shrink: 0; align-items: center; flex-wrap: wrap;
+  display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
+  padding: 5px 16px; background: var(--bg2);
+  border-bottom: 1px solid var(--line); flex-shrink: 0;
 }
-.flbl { font-size: 10px; color: var(--muted); font-family: 'JetBrains Mono', monospace; margin-right: 3px; }
+.flbl { font-size: 9px; font-family: 'JetBrains Mono', monospace; color: var(--muted); letter-spacing: .06em; margin-right: 2px; }
 .ftag {
-  font-size: 10px; padding: 2px 8px; border-radius: 3px;
+  font-size: 9px; padding: 2px 7px; border-radius: 3px;
   cursor: pointer; border: 1px solid transparent;
-  transition: opacity .12s; user-select: none;
+  font-family: 'JetBrains Mono', monospace; letter-spacing: .03em;
+  transition: opacity .15s;
 }
-.ftag.on  { opacity: 1; }
-.ftag.off { opacity: .25; }
+.ftag.off { opacity: .35; }
+
+/* ── Section dividers ── */
+.section-sep {
+  display: flex; align-items: center;
+  padding: 4px 8px 4px var(--hdr-w);
+  background: var(--bg); border-bottom: 1px solid var(--line2);
+  border-top: 2px solid rgba(255,255,255,.06);
+  font-size: 9px; font-family: 'JetBrains Mono', monospace;
+  color: var(--muted); letter-spacing: .10em; text-transform: uppercase;
+  flex-shrink: 0;
+}
 
 /* ── Canvas ── */
-.canvas { flex: 1; overflow: auto; position: relative; cursor: grab; }
-.canvas.drag { cursor: grabbing; }
+#canvas {
+  flex: 1; overflow: auto; position: relative; cursor: default;
+}
+#canvas.drag { cursor: grabbing; }
+#diagram { transform-origin: 0 0; position: relative; }
 
-#diagram { position: relative; transform-origin: 0 0; }
-
-/* ── Month header ── */
+/* ── Month row ── */
 .mo-row {
   display: flex; position: sticky; top: 0; z-index: 40;
   background: var(--bg2); border-bottom: 1px solid var(--line2);
@@ -111,6 +107,7 @@ body {
   border-right: 1px solid var(--line);
 }
 .mo-cell.crit-mo { color: rgba(248,113,113,.7); }
+.mo-cell.overall-mo { color: rgba(74,222,128,.5); }
 
 /* ── Swimlanes ── */
 .lane {
@@ -151,6 +148,33 @@ body {
 .act.done  { opacity: .5; }
 .act.dimmed { opacity: .1; pointer-events: none; }
 
+/* ── Milestone diamonds ── */
+.mstone {
+  position: absolute; width: 12px; height: 12px;
+  transform: rotate(45deg); cursor: pointer; z-index: 8;
+  border: 1.5px solid; border-radius: 2px;
+  transition: filter .1s;
+}
+.mstone:hover { filter: brightness(1.5); z-index: 30; }
+.mstone-lbl {
+  position: absolute; font-size: 7.5px; font-family: 'JetBrains Mono', monospace;
+  white-space: nowrap; pointer-events: none; z-index: 9;
+  transform: translateX(-50%);
+}
+
+/* ── MFB overlay pins ── */
+.pin-overlay {
+  position: absolute; z-index: 7; pointer-events: none;
+  border-left: 1.5px dashed rgba(103,232,249,.45);
+  top: 0;
+}
+.pin-lbl {
+  position: absolute; bottom: 2px; left: 3px;
+  font-size: 7px; font-family: 'JetBrains Mono', monospace;
+  color: rgba(103,232,249,.6); white-space: nowrap;
+  pointer-events: none;
+}
+
 .ac { font-family: 'JetBrains Mono', monospace; font-size: 7.5px; opacity: .6; margin-bottom: 1px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .an { font-size: 8.5px; font-weight: 500; line-height: 1.3; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 .ad { font-family: 'JetBrains Mono', monospace; font-size: 7px; opacity: .4; margin-top: 2px; white-space: nowrap; }
@@ -177,32 +201,40 @@ body {
   border: 1px solid var(--line2); border-radius: 6px;
   padding: 9px 12px; font-size: 11px; line-height: 1.65;
   pointer-events: none; z-index: 999; display: none;
-  max-width: 260px; box-shadow: 0 8px 28px rgba(0,0,0,.7);
+  max-width: 300px; box-shadow: 0 8px 28px rgba(0,0,0,.7);
 }
 .tc  { font-family: 'JetBrains Mono', monospace; font-size: 9px; opacity: .6; margin-bottom: 3px; }
 .tn  { font-weight: 500; margin-bottom: 5px; }
 .tr  { display: flex; justify-content: space-between; gap: 14px; opacity: .7; font-size: 10px; }
 .tv  { font-family: 'JetBrains Mono', monospace; opacity: 1; color: var(--text); }
 .tcr { color: var(--c-crit); font-weight: 600; }
+.tsc { font-size: 9px; color: var(--muted); margin-top: 3px; font-family: 'JetBrains Mono', monospace; }
 </style>
 </head>
-<body>
+<body style="display:flex;flex-direction:column;height:100vh">
 
 <div class="topbar">
   <div class="tb-left">
-    <div class="tb-title">Frederick Brickworks — Multi-Family Rev 02 · Baseline</div>
-    <div class="tb-sub">Sep 2026 – Dec 2027 &nbsp;·&nbsp; 318 activities · T01 Jul 13 2028 · Final Nov 9 2028 · 25 months &nbsp;·&nbsp; Data date Apr 1 2026</div>
+    <div class="tb-title">Frederick Brickworks — Overall + Multi-Family Rev 02 · Integrated Baseline</div>
+    <div class="tb-sub">Jun 2026 – Dec 2027 · MF: 318 acts · Overall: 183 acts · T01 Jul 13 2028 · Final Nov 9 2028 · Data date Apr 9 2026</div>
   </div>
   <div class="legend">
+    <span style="font-size:9px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.06em;border-right:1px solid var(--line2);padding-right:8px;margin-right:2px">OVERALL</span>
+    <div class="li"><div class="ld" style="background:var(--c-infra)"></div>Infra / Roads</div>
+    <div class="li"><div class="ld" style="background:var(--c-retail)"></div>Retail Lot 4</div>
+    <div class="li"><div class="ld" style="background:var(--c-grocer)"></div>Grocer</div>
+    <div class="li"><div class="ld" style="background:var(--c-owner)"></div>Owner Milestones</div>
+    <span style="font-size:9px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.06em;border-right:1px solid var(--line2);padding-right:8px;margin-left:4px;margin-right:2px">MF REV 02</span>
     <div class="li"><div class="ld" style="background:var(--c-site)"></div>Site/Util</div>
     <div class="li"><div class="ld" style="background:var(--c-garage)"></div>Garage</div>
     <div class="li"><div class="ld" style="background:var(--c-podium)"></div>Podium FA4-1</div>
-    <div class="li"><div class="ld" style="background:var(--c-fa2)"></div>Fire Area 2</div>
-    <div class="li"><div class="ld" style="background:var(--c-fa3)"></div>Fire Area 3</div>
-    <div class="li"><div class="ld" style="background:var(--c-fa42)"></div>Fire Area 4-2</div>
+    <div class="li"><div class="ld" style="background:var(--c-fa2)"></div>FA2</div>
+    <div class="li"><div class="ld" style="background:var(--c-fa3)"></div>FA3</div>
+    <div class="li"><div class="ld" style="background:var(--c-fa42)"></div>FA4-2</div>
     <div class="li"><div class="ld" style="background:var(--c-ext)"></div>Exterior</div>
-    <div class="li"><div style="width:16px;height:2px;background:var(--c-crit);border-radius:1px"></div>Critical (TF=0)</div>
-    <div class="li"><div style="width:16px;height:1px;border-top:1px dashed rgba(255,255,255,.25)"></div>Float</div>
+    <div class="li"><div style="width:16px;height:2px;background:var(--c-crit);border-radius:1px"></div>Critical</div>
+    <div class="li"><div style="width:10px;height:10px;border:1.5px solid var(--c-owner);transform:rotate(45deg);border-radius:1px"></div>Owner Milestone</div>
+    <div class="li"><div style="border-left:1.5px dashed rgba(103,232,249,.6);height:14px;width:1px"></div>MFB Pin</div>
   </div>
   <div class="ctrls">
     <button class="btn" onclick="zIn()">＋</button>
@@ -211,451 +243,377 @@ body {
     <button class="btn" onclick="zReset()">⊡ Reset</button>
     <button class="btn" id="arrBtn" onclick="toggleArr()">Arrows ON</button>
     <button class="btn" id="critBtn" onclick="toggleCrit()">All Activities</button>
+    <button class="btn" id="pinsBtn" onclick="togglePins()">MFB Pins ON</button>
   </div>
 </div>
 
 <div class="filterbar" id="filterbar">
-  <span class="flbl">LANES:</span>
-  <span class="ftag on" data-l="site"    style="background:color-mix(in srgb,var(--c-site) 15%,var(--bg4));color:var(--c-site);border-color:color-mix(in srgb,var(--c-site) 30%,transparent)"    onclick="toggleLane(this)">Site / Util</span>
-  <span class="ftag on" data-l="garage"  style="background:color-mix(in srgb,var(--c-garage) 15%,var(--bg4));color:var(--c-garage);border-color:color-mix(in srgb,var(--c-garage) 30%,transparent)"  onclick="toggleLane(this)">Garage</span>
-  <span class="ftag on" data-l="podium"  style="background:color-mix(in srgb,var(--c-podium) 15%,var(--bg4));color:var(--c-podium);border-color:color-mix(in srgb,var(--c-podium) 30%,transparent)"  onclick="toggleLane(this)">Podium FA4-1</span>
-  <span class="ftag on" data-l="fa2"     style="background:color-mix(in srgb,var(--c-fa2) 15%,var(--bg4));color:var(--c-fa2);border-color:color-mix(in srgb,var(--c-fa2) 30%,transparent)"       onclick="toggleLane(this)">Fire Area 2</span>
-  <span class="ftag on" data-l="fa3"     style="background:color-mix(in srgb,var(--c-fa3) 15%,var(--bg4));color:var(--c-fa3);border-color:color-mix(in srgb,var(--c-fa3) 30%,transparent)"       onclick="toggleLane(this)">Fire Area 3</span>
-  <span class="ftag on" data-l="fa42"    style="background:color-mix(in srgb,var(--c-fa42) 15%,var(--bg4));color:var(--c-fa42);border-color:color-mix(in srgb,var(--c-fa42) 30%,transparent)"    onclick="toggleLane(this)">Fire Area 4-2</span>
-  <span class="ftag on" data-l="exterior" style="background:color-mix(in srgb,var(--c-ext) 15%,var(--bg4));color:var(--c-ext);border-color:color-mix(in srgb,var(--c-ext) 30%,transparent)"    onclick="toggleLane(this)">Exterior</span>
+  <span class="flbl">OVERALL:</span>
+  <span class="ftag on" data-l="infra"   style="background:rgba(74,222,128,.1);color:var(--c-infra);border-color:rgba(74,222,128,.25)"   onclick="toggleLane(this)">Infra/Roads</span>
+  <span class="ftag on" data-l="retail"  style="background:rgba(251,146,60,.1);color:var(--c-retail);border-color:rgba(251,146,60,.25)"  onclick="toggleLane(this)">Retail Lot 4</span>
+  <span class="ftag on" data-l="grocer"  style="background:rgba(232,121,249,.1);color:var(--c-grocer);border-color:rgba(232,121,249,.25)" onclick="toggleLane(this)">Grocer</span>
+  <span class="ftag on" data-l="owner"   style="background:rgba(103,232,249,.1);color:var(--c-owner);border-color:rgba(103,232,249,.25)"  onclick="toggleLane(this)">Owner Milestones</span>
+  <span class="flbl" style="margin-left:8px">MF REV 02:</span>
+  <span class="ftag on" data-l="site"    style="background:color-mix(in srgb,var(--c-site) 15%,var(--bg4));color:var(--c-site)"    onclick="toggleLane(this)">Site/Util</span>
+  <span class="ftag on" data-l="garage"  style="background:color-mix(in srgb,var(--c-garage) 15%,var(--bg4));color:var(--c-garage)"  onclick="toggleLane(this)">Garage</span>
+  <span class="ftag on" data-l="podium"  style="background:color-mix(in srgb,var(--c-podium) 15%,var(--bg4));color:var(--c-podium)"  onclick="toggleLane(this)">Podium FA4-1</span>
+  <span class="ftag on" data-l="fa2"     style="background:color-mix(in srgb,var(--c-fa2) 15%,var(--bg4));color:var(--c-fa2)"     onclick="toggleLane(this)">FA2</span>
+  <span class="ftag on" data-l="fa3"     style="background:color-mix(in srgb,var(--c-fa3) 15%,var(--bg4));color:var(--c-fa3)"     onclick="toggleLane(this)">FA3</span>
+  <span class="ftag on" data-l="fa42"    style="background:color-mix(in srgb,var(--c-fa42) 15%,var(--bg4));color:var(--c-fa42)"    onclick="toggleLane(this)">FA4-2</span>
+  <span class="ftag on" data-l="exterior" style="background:color-mix(in srgb,var(--c-ext) 15%,var(--bg4));color:var(--c-ext)"   onclick="toggleLane(this)">Exterior</span>
 </div>
 
-<div class="canvas" id="canvas">
+<div id="canvas">
   <div id="diagram">
     <div class="mo-row" id="moRow"></div>
-    <div id="lanesEl"></div>
-    <svg id="asvg">
-      <defs>
-        <marker id="mc" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto">
-          <path d="M1 1L7 4L1 7" fill="none" stroke="rgba(248,113,113,0.8)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </marker>
-        <marker id="mn" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="4" markerHeight="4" orient="auto">
-          <path d="M1 1L7 4L1 7" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </marker>
-      </defs>
-    </svg>
+    <div id="lanesEl" style="position:relative">
+      <svg id="asvg"><defs>
+        <marker id="mc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="rgba(248,113,113,0.8)" stroke-width="1.5" stroke-linecap="round"/></marker>
+        <marker id="mn" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/></marker>
+      </defs></svg>
+    </div>
   </div>
 </div>
-
 <div class="tip" id="tip"></div>
 
 <script>
 // ─────────────────────────────────────────────────────────────────
 // CONSTANTS
 // ─────────────────────────────────────────────────────────────────
-const MO_W=152, HDR_W=156, ACT_H=44, RPAD=6, MO_HDR=34;
-const PHASE_START = new Date(2026,8,1); // Sep 1 2026
+const MO_W=138, HDR_W=156, ACT_H=44, RPAD=6, MO_HDR=34;
+const PHASE_START = new Date(2026,5,1); // Jun 1 2026 — extended from Sep 2026
 
 const MONTHS = [
-  {l:'SEP 2026',y:2026,m:9}, {l:'OCT 2026',y:2026,m:10},
-  {l:'NOV 2026',y:2026,m:11},{l:'DEC 2026',y:2026,m:12},
-  {l:'JAN 2027',y:2027,m:1}, {l:'FEB 2027',y:2027,m:2},
-  {l:'MAR 2027',y:2027,m:3}, {l:'APR 2027',y:2027,m:4},
-  {l:'MAY 2027',y:2027,m:5}, {l:'JUN 2027',y:2027,m:6},
-  {l:'JUL 2027',y:2027,m:7}, {l:'AUG 2027',y:2027,m:8},
-  {l:'SEP 2027',y:2027,m:9}, {l:'OCT 2027',y:2027,m:10},
-  {l:'NOV 2027',y:2027,m:11},{l:'DEC 2027',y:2027,m:12},
+  {l:'JUN 2026',y:2026,m:6},  {l:'JUL 2026',y:2026,m:7},  {l:'AUG 2026',y:2026,m:8},
+  {l:'SEP 2026',y:2026,m:9},  {l:'OCT 2026',y:2026,m:10}, {l:'NOV 2026',y:2026,m:11},
+  {l:'DEC 2026',y:2026,m:12}, {l:'JAN 2027',y:2027,m:1},  {l:'FEB 2027',y:2027,m:2},
+  {l:'MAR 2027',y:2027,m:3},  {l:'APR 2027',y:2027,m:4},  {l:'MAY 2027',y:2027,m:5},
+  {l:'JUN 2027',y:2027,m:6},  {l:'JUL 2027',y:2027,m:7},  {l:'AUG 2027',y:2027,m:8},
+  {l:'SEP 2027',y:2027,m:9},  {l:'OCT 2027',y:2027,m:10}, {l:'NOV 2027',y:2027,m:11},
+  {l:'DEC 2027',y:2027,m:12},
 ];
 
-// Critical months (Oct 2026–Dec 2026 garage/FA2 chain; Jul–Aug 2027 roofing/MEP)
 const CRIT_MOS = new Set(['OCT 2026','NOV 2026','DEC 2026','JAN 2027','FEB 2027','MAR 2027','APR 2027','MAY 2027','JUN 2027','JUL 2027']);
+const OVRL_MOS = new Set(['JUN 2026','JUL 2026','AUG 2026','SEP 2026']);
 
+// ─────────────────────────────────────────────────────────────────
+// LANE DEFINITIONS  — Overall first, then MF Rev 02
+// ─────────────────────────────────────────────────────────────────
 const LANE_DEFS = [
-  {id:'site',    name:'Site / Util',    sub:'E&S · power · utilities · milestones', color:'var(--c-site)'},
-  {id:'garage',  name:'Garage',         sub:'Precast structure · MEP · elevators',   color:'var(--c-garage)'},
-  {id:'podium',  name:'Podium FA4-1',   sub:'Zone 2 · Amenity · Floors 2–5',        color:'var(--c-podium)'},
-  {id:'fa2',     name:'Fire Area 2',    sub:'Foundations → unit finishes · 120 units',color:'var(--c-fa2)'},
-  {id:'fa3',     name:'Fire Area 3',    sub:'Foundations → unit finishes · 100 units',color:'var(--c-fa3)'},
-  {id:'fa42',    name:'Fire Area 4-2',  sub:'Zone 7 · all floors · 64 units',        color:'var(--c-fa42)'},
-  {id:'exterior',name:'Exterior',       sub:'Roofing · windows · masonry · siding',  color:'var(--c-ext)'},
+  // ── Overall schedule lanes ──
+  {id:'infra',   name:'Infra / Roads',     sub:'Brickworks · Pug Mill · Lower Depot · Monocacy RI/RO', color:'var(--c-infra)',  group:'overall'},
+  {id:'retail',  name:'Retail Lot 4',      sub:'Wet utilities · site work · Retail Bldgs #1–4',        color:'var(--c-retail)', group:'overall'},
+  {id:'grocer',  name:'Grocer',            sub:'Shell & LL construction · fit-out · opens Jul 2028',   color:'var(--c-grocer)', group:'overall'},
+  {id:'owner',   name:'Owner Milestones',  sub:'FinMile + LOE milestones from Overall schedule',       color:'var(--c-owner)',  group:'overall'},
+  // ── MF Rev 02 lanes ──
+  {id:'site',    name:'Site / Util',       sub:'E&S · power · utilities · MFB milestones',             color:'var(--c-site)',   group:'mf'},
+  {id:'garage',  name:'Garage',            sub:'Precast structure · MEP · elevators',                  color:'var(--c-garage)', group:'mf'},
+  {id:'podium',  name:'Podium FA4-1',      sub:'Zone 2 · Amenity · Floors 2–5',                        color:'var(--c-podium)', group:'mf'},
+  {id:'fa2',     name:'Fire Area 2',       sub:'Foundations → unit finishes · 120 units',              color:'var(--c-fa2)',    group:'mf'},
+  {id:'fa3',     name:'Fire Area 3',       sub:'Foundations → unit finishes · 100 units',              color:'var(--c-fa3)',    group:'mf'},
+  {id:'fa42',    name:'Fire Area 4-2',     sub:'Zone 7 · all floors · 64 units',                       color:'var(--c-fa42)',   group:'mf'},
+  {id:'exterior',name:'Exterior',          sub:'Roofing · windows · masonry · siding',                 color:'var(--c-ext)',    group:'mf'},
 ];
 
 // ─────────────────────────────────────────────────────────────────
-// ACTIVITY DATA — derived directly from Multi-Family-Rev_02.xer
-// All dates verified against XER early_start / early_end
-// TF = total_float_hr_cnt from XER; crit = TF==0 and not complete
+// OVERALL SCHEDULE ACTIVITIES — from FBW_-_Overall_-_04-09-2026.xer
 // ─────────────────────────────────────────────────────────────────
-const ACTS = [
-// SITE (30)
-{id:'PP-1030',    l:'site',    n:'Release Switchgear',                     es:[2026,7,22],  ef:[2027,4,6],   tf:1224, crit:false, done:false},
-{id:'SITE-04',    l:'site',    n:'Mobilization / E&S Control',             es:[2026,9,28],  ef:[2026,9,28],  tf:0,    crit:true,  done:false},
-{id:'SITE-14',    l:'site',    n:'County E&S Inspection',                  es:[2026,9,28],  ef:[2026,10,1],  tf:0,    crit:true,  done:false},
-{id:'M041',       l:'site',    n:'E&S Complete ✦',                         es:[2026,10,2],  ef:[2026,10,2],  tf:4280, crit:false, done:false},
-{id:'SITE-24',    l:'site',    n:'Site Grading (Early Work)',               es:[2026,10,2],  ef:[2026,10,13], tf:0,    crit:true,  done:false},
-{id:'M051',       l:'site',    n:'Pad Delivery ✦',                         es:[2026,10,14], ef:[2026,10,14], tf:4216, crit:false, done:false},
-{id:'SITE-34',    l:'site',    n:'Bldg/Garage Pad Delivery',                es:[2026,10,14], ef:[2026,10,14], tf:0,    crit:true,  done:false},
-{id:'SU-1000',    l:'site',    n:'Create Staging Area',                     es:[2026,10,14], ef:[2026,10,20], tf:1120, crit:false, done:false},
-{id:'SU-1010',    l:'site',    n:'Sanitary Sewer',                          es:[2026,10,21], ef:[2026,11,16], tf:1120, crit:false, done:false},
-{id:'SU-1020',    l:'site',    n:'Storm Sewer',                             es:[2026,11,17], ef:[2027,1,13],  tf:1120, crit:false, done:false},
-{id:'M071',       l:'site',    n:'Crane Erection Started ✦',               es:[2027,1,12],  ef:[2027,1,12],  tf:3736, crit:false, done:false},
-{id:'SU-1030',    l:'site',    n:'Water Line',                              es:[2027,1,14],  ef:[2027,2,2],   tf:1120, crit:false, done:false},
-{id:'SU-1040',    l:'site',    n:'First Energy Ductbank',                   es:[2027,2,3],   ef:[2027,3,9],   tf:1120, crit:false, done:false},
-{id:'SU-1050',    l:'site',    n:'Telecomm Ductbank',                       es:[2027,3,10],  ef:[2027,4,5],   tf:1120, crit:false, done:false},
-{id:'PP-1040',    l:'site',    n:'Install Switchgear',                      es:[2027,4,7],   ef:[2027,4,20],  tf:1224, crit:false, done:false},
-{id:'PP-1050',    l:'site',    n:'TPF Electrical Room',                     es:[2027,4,21],  ef:[2027,4,27],  tf:1224, crit:false, done:false},
-{id:'PP-1060',    l:'site',    n:'First Energy Install Cables',             es:[2027,4,28],  ef:[2027,6,16],  tf:1224, crit:false, done:false},
-{id:'M081',       l:'site',    n:'Foundations Complete ✦',                 es:[2027,5,14],  ef:[2027,5,14],  tf:3032, crit:false, done:false},
-{id:'FT-1070',    l:'site',    n:'Bottoming Out ✦',                        es:[2027,5,14],  ef:[2027,5,14],  tf:2504, crit:false, done:false},
-{id:'PP-1070',    l:'site',    n:'Perm Power / House Meter',                es:[2027,6,17],  ef:[2027,6,17],  tf:1224, crit:false, done:false},
-{id:'PP-1080',    l:'site',    n:'Install Meters / Hot Check',              es:[2027,6,17],  ef:[2027,6,30],  tf:1224, crit:false, done:false},
-{id:'M061',       l:'site',    n:'Temp Power ✦',                           es:[2027,6,21],  ef:[2027,6,21],  tf:680,  crit:false, done:false},
-{id:'PP-1000',    l:'site',    n:'Temporary Power Established',             es:[2027,6,21],  ef:[2027,6,21],  tf:680,  crit:false, done:false},
-{id:'M131',       l:'site',    n:'Permanent Power ✦',                      es:[2027,7,1],   ef:[2027,7,1],   tf:2768, crit:false, done:false},
-{id:'PP-1090',    l:'site',    n:'Perm Power Energized',                    es:[2027,7,1],   ef:[2027,7,1],   tf:2768, crit:false, done:false},
-{id:'M091',       l:'site',    n:'SOG Complete ✦',                         es:[2027,7,14],  ef:[2027,7,14],  tf:2704, crit:false, done:false},
-{id:'SOG-1220',   l:'site',    n:'SOG Complete (all FAs)',                  es:[2027,7,14],  ef:[2027,7,14],  tf:2240, crit:false, done:false},
-{id:'M101',       l:'site',    n:'Topping Out ✦',                          es:[2027,11,4],  ef:[2027,11,4],  tf:2064, crit:false, done:false},
-{id:'M111',       l:'site',    n:'Roof Watertight ✦',                      es:[2027,11,11], ef:[2027,11,11], tf:2024, crit:false, done:false},
-{id:'M121',       l:'site',    n:'Skin Watertight ✦',                      es:[2027,12,17], ef:[2027,12,17], tf:1832, crit:false, done:false},
-// GARAGE (23)
-{id:'PRE-18001',  l:'garage',  n:'CCG Purchasing / Release Subs',          es:[2026,6,2],   ef:[2026,10,7],  tf:1224, crit:false, done:false},
-{id:'PRE-3150',   l:'garage',  n:'Precast Fabrication',                    es:[2026,8,11],  ef:[2027,1,4],   tf:56,   crit:false, done:false},
-{id:'PG-301A',    l:'garage',  n:'Aggregate Piers',                        es:[2026,10,15], ef:[2026,11,3],  tf:0,    crit:true,  done:false},
-{id:'PG-301B',    l:'garage',  n:'Concrete Footings',                      es:[2026,11,4],  ef:[2026,12,9],  tf:0,    crit:true,  done:false},
-{id:'PG-301C',    l:'garage',  n:'Retaining Walls',                        es:[2026,11,18], ef:[2026,12,16], tf:16,   crit:false, done:false},
-{id:'PG-301D',    l:'garage',  n:'Damproofing Walls',                      es:[2026,12,22], ef:[2027,1,4],   tf:16,   crit:false, done:false},
-{id:'PG-301E',    l:'garage',  n:'Backfill Walls',                         es:[2027,1,5],   ef:[2027,1,12],  tf:16,   crit:false, done:false},
-{id:'PG-302',     l:'garage',  n:'Crane Erection',                         es:[2027,1,12],  ef:[2027,1,18],  tf:16,   crit:false, done:false},
-{id:'PG-303',     l:'garage',  n:'Precast Erection',                       es:[2027,1,19],  ef:[2027,4,8],   tf:16,   crit:false, done:false},
-{id:'PG-313',     l:'garage',  n:'UG Plumbing',                            es:[2027,4,9],   ef:[2027,4,22],  tf:1376, crit:false, done:false},
-{id:'PG-323',     l:'garage',  n:'Slab on Grade',                          es:[2027,4,23],  ef:[2027,5,20],  tf:1376, crit:false, done:false},
-{id:'PG-333',     l:'garage',  n:'Finish & Caulk Precast',                 es:[2027,4,23],  ef:[2027,5,20],  tf:1624, crit:false, done:false},
-{id:'PG-343',     l:'garage',  n:'Finish MEP',                             es:[2027,5,21],  ef:[2027,7,19],  tf:1672, crit:false, done:false},
-{id:'ELEV-001',   l:'garage',  n:'Elevator 1 — Garage Service',            es:[2027,6,21],  ef:[2027,8,17],  tf:592,  crit:false, done:false},
-{id:'PG-353',     l:'garage',  n:'Ready for Temp Use ✦',                  es:[2027,7,20],  ef:[2027,7,20],  tf:1672, crit:false, done:false},
-{id:'PG-363',     l:'garage',  n:'Barrier Cables',                         es:[2027,7,21],  ef:[2027,8,3],   tf:1672, crit:false, done:false},
-{id:'PG-373',     l:'garage',  n:'Pipe Guards / Metals',                   es:[2027,8,4],   ef:[2027,8,10],  tf:1672, crit:false, done:false},
-{id:'PG-383',     l:'garage',  n:'Cleaning',                               es:[2027,8,11],  ef:[2027,8,17],  tf:1672, crit:false, done:false},
-{id:'ELEV-002',   l:'garage',  n:'Elevator 2 — Garage Passenger',          es:[2027,8,11],  ef:[2027,10,6],  tf:592,  crit:false, done:false},
-{id:'PG-393',     l:'garage',  n:'Line Striping',                          es:[2027,8,18],  ef:[2027,8,24],  tf:1672, crit:false, done:false},
-{id:'PG-403',     l:'garage',  n:'Signage',                                es:[2027,8,25],  ef:[2027,8,31],  tf:1672, crit:false, done:false},
-{id:'PG-413',     l:'garage',  n:'Painting & Room Finishes',               es:[2027,9,1],   ef:[2027,9,15],  tf:1672, crit:false, done:false},
-{id:'PG-423',     l:'garage',  n:'Garage Turn-Over ✦',                    es:[2027,9,16],  ef:[2027,9,16],  tf:1672, crit:false, done:false},
-// PODIUM FA4-1 (57 — representative set; all interior rows compressed to key items)
-{id:'FT-1000',    l:'podium',  n:'Foundations FA4-1',                      es:[2026,10,15], ef:[2026,11,3],  tf:160,  crit:false, done:false},
-{id:'UG-1080',    l:'podium',  n:'UG Rough-In FA4-1',                      es:[2026,11,4],  ef:[2026,11,17], tf:448,  crit:false, done:false},
-{id:'SOG-1150',   l:'podium',  n:'SOG FA4-1 Amenity',                      es:[2026,11,18], ef:[2026,12,7],  tf:448,  crit:false, done:false},
-{id:'POD-1300',   l:'podium',  n:'Columns & Walls',                        es:[2026,12,8],  ef:[2027,1,5],   tf:448,  crit:false, done:false},
-{id:'POD-1310',   l:'podium',  n:'Elevated Slab 2F',                       es:[2027,4,9],   ef:[2027,4,22],  tf:16,   crit:false, done:false},
-{id:'CMU-1140',   l:'podium',  n:'Stair 7 CMU Shaft',                      es:[2027,4,23],  ef:[2027,6,4],   tf:16,   crit:false, done:false},
-{id:'POD-1320',   l:'podium',  n:'Podium Topped Out ✦',                   es:[2027,4,23],  ef:[2027,4,23],  tf:176,  crit:false, done:false},
-{id:'POD-1330',   l:'podium',  n:'Cols & Walls Zone 7',                    es:[2027,5,14],  ef:[2027,5,20],  tf:736,  crit:false, done:false},
-{id:'UF-1220',    l:'podium',  n:'2F Walls + 3F Trusses FA4-1',            es:[2027,6,7],   ef:[2027,6,18],  tf:16,   crit:false, done:false},
-{id:'POD-1340',   l:'podium',  n:'Elevated Slab Bridge',                   es:[2027,5,21],  ef:[2027,6,11],  tf:736,  crit:false, done:false},
-{id:'POD-1350',   l:'podium',  n:'Bridge Topped Out ✦',                   es:[2027,6,14],  ef:[2027,6,14],  tf:736,  crit:false, done:false},
-{id:'A8270',      l:'podium',  n:'Amenity Build-Out (Placeholder)',         es:[2027,6,21],  ef:[2028,3,6],   tf:560,  crit:false, done:false},
-{id:'UF-1320',    l:'podium',  n:'3F Walls + 4F Trusses FA4-1',            es:[2027,6,21],  ef:[2027,7,8],   tf:16,   crit:false, done:false},
-{id:'UF-1420',    l:'podium',  n:'4F Walls + 5F Trusses FA4-1',            es:[2027,7,9],   ef:[2027,7,22],  tf:16,   crit:false, done:false},
-{id:'UF-1520',    l:'podium',  n:'5F Walls + Roof Trusses FA4-1',          es:[2027,7,23],  ef:[2027,8,10],  tf:16,   crit:false, done:false},
-{id:'MEP-1200',   l:'podium',  n:'Stacks/Risers 2F FA4-1',                 es:[2027,7,23],  ef:[2027,7,29],  tf:1280, crit:false, done:false},
-{id:'MEP-1300',   l:'podium',  n:'Stacks/Risers 3F FA4-1',                 es:[2027,7,30],  ef:[2027,8,5],   tf:1280, crit:false, done:false},
-{id:'MEP-1400',   l:'podium',  n:'Stacks/Risers 4F FA4-1',                 es:[2027,8,6],   ef:[2027,8,12],  tf:1280, crit:false, done:false},
-{id:'UF-1620',    l:'podium',  n:'Roof Sheathing FA4-1',                   es:[2027,8,11],  ef:[2027,8,24],  tf:16,   crit:false, done:false},
-{id:'MEP-1500',   l:'podium',  n:'Stacks/Risers 5F FA4-1',                 es:[2027,8,13],  ef:[2027,8,19],  tf:1280, crit:false, done:false},
-{id:'ELEV-004',   l:'podium',  n:'Elevator 4 — Amenity',                   es:[2027,10,7],  ef:[2027,12,1],  tf:592,  crit:false, done:false},
-{id:'MEP-1520',   l:'podium',  n:'MEP Rough-In 5F FA4-1',                  es:[2027,10,13], ef:[2027,10,19], tf:1024, crit:false, done:false},
-{id:'MEP-1420',   l:'podium',  n:'MEP Rough-In 4F FA4-1',                  es:[2027,10,20], ef:[2027,10,26], tf:1024, crit:false, done:false},
-{id:'MEP-1320',   l:'podium',  n:'MEP Rough-In 3F FA4-1',                  es:[2027,10,27], ef:[2027,11,2],  tf:1024, crit:false, done:false},
-{id:'UNIT-1500',  l:'podium',  n:'Insulation Insp 5F FA4-1',               es:[2027,11,2],  ef:[2027,11,4],  tf:952,  crit:false, done:false},
-{id:'MEP-1220',   l:'podium',  n:'MEP Rough-In 2F FA4-1',                  es:[2027,11,3],  ef:[2027,11,9],  tf:1128, crit:false, done:false},
-{id:'UNIT-1400',  l:'podium',  n:'Insulation Insp 4F FA4-1',               es:[2027,11,5],  ef:[2027,11,9],  tf:968,  crit:false, done:false},
-{id:'UNIT-1505',  l:'podium',  n:'Board Tape Sand 5F FA4-1',               es:[2027,11,5],  ef:[2027,11,11], tf:952,  crit:false, done:false},
-{id:'UNIT-1300',  l:'podium',  n:'Insulation Insp 3F FA4-1',               es:[2027,11,10], ef:[2027,11,12], tf:984,  crit:false, done:false},
-{id:'UNIT-1405',  l:'podium',  n:'Board Tape Sand 4F FA4-1',               es:[2027,11,10], ef:[2027,11,16], tf:968,  crit:false, done:false},
-{id:'COR-1500',   l:'podium',  n:'Corridor Board/Tape 5F FA4-1',           es:[2027,11,12], ef:[2027,11,18], tf:1344, crit:false, done:false},
-{id:'UNIT-1200',  l:'podium',  n:'Insulation Insp 2F FA4-1',               es:[2027,11,15], ef:[2027,11,17], tf:1104, crit:false, done:false},
-{id:'UNIT-1305',  l:'podium',  n:'Board Tape Sand 3F FA4-1',               es:[2027,11,15], ef:[2027,11,19], tf:984,  crit:false, done:false},
-{id:'UNIT-1205',  l:'podium',  n:'Board Tape Sand 2F FA4-1',               es:[2027,11,18], ef:[2027,11,24], tf:1104, crit:false, done:false},
-{id:'COR-1400',   l:'podium',  n:'Corridor Board/Tape 4F FA4-1',           es:[2027,11,19], ef:[2027,11,29], tf:1344, crit:false, done:false},
-{id:'ELEV-003',   l:'podium',  n:'Elevator 3 — CMU Shaft',                 es:[2027,12,2],  ef:[2028,1,13],  tf:592,  crit:false, done:false},
-{id:'UNIT-1513',  l:'podium',  n:'Level Rock/Gypcrete 5F FA4-1',           es:[2027,12,3],  ef:[2027,12,7],  tf:856,  crit:false, done:false},
-{id:'COR-1300',   l:'podium',  n:'Corridor Board/Tape 3F FA4-1',           es:[2027,11,30], ef:[2027,12,6],  tf:1344, crit:false, done:false},
-{id:'COR-1200',   l:'podium',  n:'Corridor Board/Tape 2F FA4-1',           es:[2027,12,7],  ef:[2027,12,13], tf:1512, crit:false, done:false},
-{id:'UNIT-1515',  l:'podium',  n:'Cabinets 5F FA4-1',                      es:[2027,12,30], ef:[2028,1,6],   tf:816,  crit:false, done:false},
-// FIRE AREA 2 (84 — full set from XER)
-{id:'FT-1020',    l:'fa2',     n:'Foundations FA2',                        es:[2026,12,10], ef:[2027,1,7],   tf:0,    crit:true,  done:false},
-{id:'UG-1100',    l:'fa2',     n:'UG Rough-In FA2',                        es:[2027,1,8],   ef:[2027,2,3],   tf:0,    crit:true,  done:false},
-{id:'SOG-1170',   l:'fa2',     n:'SOG FA2',                                es:[2027,1,22],  ef:[2027,2,17],  tf:0,    crit:true,  done:false},
-{id:'UF-2140',    l:'fa2',     n:'1F Walls + 2F Trusses FA2',              es:[2027,2,18],  ef:[2027,3,17],  tf:0,    crit:true,  done:false},
-{id:'UF-2240',    l:'fa2',     n:'2F Walls + 3F Trusses FA2',              es:[2027,3,18],  ef:[2027,4,13],  tf:0,    crit:true,  done:false},
-{id:'UF-2340',    l:'fa2',     n:'3F Walls + 4F Trusses FA2',              es:[2027,4,14],  ef:[2027,5,11],  tf:0,    crit:true,  done:false},
-{id:'MEP-2100',   l:'fa2',     n:'Stacks/Risers 1F FA2',                   es:[2027,5,12],  ef:[2027,5,25],  tf:24,   crit:false, done:false},
-{id:'UF-2440',    l:'fa2',     n:'4F Walls + Roof Trusses FA2',            es:[2027,5,12],  ef:[2027,6,9],   tf:0,    crit:true,  done:false},
-{id:'MEP-2110',   l:'fa2',     n:'Tubs/Showers 1F FA2',                    es:[2027,5,26],  ef:[2027,6,9],   tf:184,  crit:false, done:false},
-{id:'MEP-2200',   l:'fa2',     n:'Stacks/Risers 2F FA2',                   es:[2027,5,26],  ef:[2027,6,9],   tf:24,   crit:false, done:false},
-{id:'UF-2540',    l:'fa2',     n:'Roof Sheathing FA2',                     es:[2027,6,10],  ef:[2027,7,6],   tf:0,    crit:true,  done:false},
-{id:'MEP-2210',   l:'fa2',     n:'Tubs/Showers 2F FA2',                    es:[2027,6,10],  ef:[2027,6,23],  tf:984,  crit:false, done:false},
-{id:'MEP-2300',   l:'fa2',     n:'Stacks/Risers 3F FA2',                   es:[2027,6,10],  ef:[2027,6,23],  tf:24,   crit:false, done:false},
-{id:'MEP-2310',   l:'fa2',     n:'Tubs/Showers 3F FA2',                    es:[2027,6,24],  ef:[2027,7,8],   tf:216,  crit:false, done:false},
-{id:'MEP-2400',   l:'fa2',     n:'Stacks/Risers 4F FA2',                   es:[2027,6,24],  ef:[2027,7,8],   tf:24,   crit:false, done:false},
-{id:'MEP-2410',   l:'fa2',     n:'Tubs/Showers 4F FA2',                    es:[2027,7,9],   ef:[2027,7,22],  tf:24,   crit:false, done:false},
-{id:'MEP-2120',   l:'fa2',     n:'MEP Rough-In 1F FA2',                    es:[2027,7,14],  ef:[2027,7,27],  tf:0,    crit:true,  done:false},
-{id:'MEP-2420',   l:'fa2',     n:'MEP Rough-In 4F FA2',                    es:[2027,7,28],  ef:[2027,8,10],  tf:0,    crit:true,  done:false},
-{id:'UNIT-2100',  l:'fa2',     n:'Insulation Insp 1F FA2',                 es:[2027,7,28],  ef:[2027,8,3],   tf:40,   crit:false, done:false},
-{id:'UNIT-2105',  l:'fa2',     n:'Board Tape Sand 1F FA2',                 es:[2027,8,4],   ef:[2027,8,24],  tf:184,  crit:false, done:false},
-{id:'MEP-2320',   l:'fa2',     n:'MEP Rough-In 3F FA2',                    es:[2027,8,11],  ef:[2027,8,24],  tf:32,   crit:false, done:false},
-{id:'UNIT-2400',  l:'fa2',     n:'Insulation Insp 4F FA2',                 es:[2027,8,11],  ef:[2027,8,17],  tf:0,    crit:true,  done:false},
-{id:'UNIT-2405',  l:'fa2',     n:'Board Tape Sand 4F FA2',                 es:[2027,8,18],  ef:[2027,9,8],   tf:0,    crit:true,  done:false},
-{id:'MEP-2220',   l:'fa2',     n:'MEP Rough-In 2F FA2',                    es:[2027,8,25],  ef:[2027,9,8],   tf:640,  crit:false, done:false},
-{id:'UNIT-2110',  l:'fa2',     n:'Prime Paint 1F FA2',                     es:[2027,8,25],  ef:[2027,8,27],  tf:184,  crit:false, done:false},
-{id:'UNIT-2300',  l:'fa2',     n:'Insulation Insp 3F FA2',                 es:[2027,8,25],  ef:[2027,8,31],  tf:32,   crit:false, done:false},
-{id:'COR-2100',   l:'fa2',     n:'Corridor Board/Tape 1F FA2',             es:[2027,8,25],  ef:[2027,9,8],   tf:920,  crit:false, done:false},
-{id:'UNIT-2115',  l:'fa2',     n:'Cabinets 1F FA2',                        es:[2027,8,30],  ef:[2027,9,9],   tf:184,  crit:false, done:false},
-{id:'UNIT-2305',  l:'fa2',     n:'Board Tape Sand 3F FA2',                 es:[2027,9,1],   ef:[2027,9,22],  tf:32,   crit:false, done:false},
-{id:'UNIT-2200',  l:'fa2',     n:'Insulation Insp 2F FA2',                 es:[2027,9,9],   ef:[2027,9,15],  tf:640,  crit:false, done:false},
-{id:'UNIT-2410',  l:'fa2',     n:'Prime Paint 4F FA2',                     es:[2027,9,9],   ef:[2027,9,13],  tf:0,    crit:true,  done:false},
-{id:'COR-2400',   l:'fa2',     n:'Corridor Board/Tape 4F FA2',             es:[2027,9,9],   ef:[2027,9,22],  tf:920,  crit:false, done:false},
-{id:'UNIT-2120',  l:'fa2',     n:'Prehung Doors 1F FA2',                   es:[2027,9,10],  ef:[2027,9,21],  tf:184,  crit:false, done:false},
-{id:'UNIT-2413',  l:'fa2',     n:'Level Rock/Gypcrete 4F FA2',             es:[2027,9,14],  ef:[2027,9,16],  tf:0,    crit:true,  done:false},
-{id:'UNIT-2205',  l:'fa2',     n:'Board Tape Sand 2F FA2',                 es:[2027,9,16],  ef:[2027,10,6],  tf:640,  crit:false, done:false},
-{id:'UNIT-2125',  l:'fa2',     n:'Tile 1F FA2',                            es:[2027,9,22],  ef:[2027,10,5],  tf:184,  crit:false, done:false},
-{id:'UNIT-2310',  l:'fa2',     n:'Prime Paint 3F FA2',                     es:[2027,9,23],  ef:[2027,9,27],  tf:32,   crit:false, done:false},
-{id:'COR-2300',   l:'fa2',     n:'Corridor Board/Tape 3F FA2',             es:[2027,9,23],  ef:[2027,10,6],  tf:1464, crit:false, done:false},
-{id:'UNIT-2313',  l:'fa2',     n:'Level Rock/Gypcrete 3F FA2',             es:[2027,9,28],  ef:[2027,9,30],  tf:32,   crit:false, done:false},
-{id:'UNIT-2415',  l:'fa2',     n:'Cabinets 4F FA2',                        es:[2027,10,1],  ef:[2027,10,12], tf:0,    crit:true,  done:false},
-{id:'UNIT-2130',  l:'fa2',     n:'Countertops 1F FA2',                     es:[2027,10,6],  ef:[2027,10,15], tf:184,  crit:false, done:false},
-{id:'UNIT-2210',  l:'fa2',     n:'Prime Paint 2F FA2',                     es:[2027,10,7],  ef:[2027,10,11], tf:640,  crit:false, done:false},
-{id:'UNIT-2213',  l:'fa2',     n:'Level Rock/Gypcrete 2F FA2',             es:[2027,10,12], ef:[2027,10,14], tf:640,  crit:false, done:false},
-{id:'UNIT-2420',  l:'fa2',     n:'Prehung Doors 4F FA2',                   es:[2027,10,13], ef:[2027,10,22], tf:0,    crit:true,  done:false},
-{id:'UNIT-2315',  l:'fa2',     n:'Cabinets 3F FA2',                        es:[2027,10,15], ef:[2027,10,26], tf:32,   crit:false, done:false},
-{id:'UNIT-2135',  l:'fa2',     n:'1st Point Up 1F FA2',                    es:[2027,10,18], ef:[2027,10,27], tf:184,  crit:false, done:false},
-{id:'UNIT-2425',  l:'fa2',     n:'Tile 4F FA2',                            es:[2027,10,25], ef:[2027,11,5],  tf:0,    crit:true,  done:false},
-{id:'UNIT-2320',  l:'fa2',     n:'Prehung Doors 3F FA2',                   es:[2027,10,27], ef:[2027,11,5],  tf:400,  crit:false, done:false},
-{id:'UNIT-2140',  l:'fa2',     n:'Finish Paint 1F FA2',                    es:[2027,10,28], ef:[2027,11,8],  tf:184,  crit:false, done:false},
-{id:'UNIT-2215',  l:'fa2',     n:'Cabinets 2F FA2',                        es:[2027,11,8],  ef:[2027,11,17], tf:592,  crit:false, done:false},
-{id:'UNIT-2325',  l:'fa2',     n:'Tile 3F FA2',                            es:[2027,11,8],  ef:[2027,11,19], tf:400,  crit:false, done:false},
-{id:'UNIT-2430',  l:'fa2',     n:'Countertops 4F FA2',                     es:[2027,11,8],  ef:[2027,11,17], tf:0,    crit:true,  done:false},
-{id:'UNIT-2145',  l:'fa2',     n:'Rough Clean 1F FA2',                     es:[2027,11,9],  ef:[2027,11,10], tf:184,  crit:false, done:false},
-{id:'UNIT-2150',  l:'fa2',     n:'Flooring 1F FA2',                        es:[2027,11,11], ef:[2027,11,22], tf:184,  crit:false, done:false},
-{id:'UNIT-2220',  l:'fa2',     n:'Prehung Doors 2F FA2',                   es:[2027,11,18], ef:[2027,12,1],  tf:592,  crit:false, done:false},
-{id:'UNIT-2435',  l:'fa2',     n:'1st Point Up 4F FA2',                    es:[2027,11,18], ef:[2027,12,1],  tf:0,    crit:true,  done:false},
-{id:'UNIT-2330',  l:'fa2',     n:'Countertops 3F FA2',                     es:[2027,11,22], ef:[2027,12,3],  tf:400,  crit:false, done:false},
-{id:'UNIT-2155',  l:'fa2',     n:'MEP Finishes 1F FA2',                    es:[2027,11,23], ef:[2027,12,6],  tf:184,  crit:false, done:false},
-{id:'UNIT-2225',  l:'fa2',     n:'Tile 2F FA2',                            es:[2027,12,2],  ef:[2027,12,15], tf:592,  crit:false, done:false},
-{id:'UNIT-2440',  l:'fa2',     n:'Finish Paint 4F FA2',                    es:[2027,12,2],  ef:[2027,12,13], tf:0,    crit:true,  done:false},
-{id:'UNIT-2335',  l:'fa2',     n:'1st Point Up 3F FA2',                    es:[2027,12,6],  ef:[2027,12,15], tf:400,  crit:false, done:false},
-{id:'UNIT-2160',  l:'fa2',     n:'Bath Accessories 1F FA2',                es:[2027,12,7],  ef:[2027,12,13], tf:184,  crit:false, done:false},
-{id:'UNIT-2165',  l:'fa2',     n:'Appliances 1F FA2',                      es:[2027,12,14], ef:[2027,12,15], tf:184,  crit:false, done:false},
-{id:'UNIT-2445',  l:'fa2',     n:'Rough Clean 4F FA2',                     es:[2027,12,14], ef:[2027,12,15], tf:0,    crit:true,  done:false},
-{id:'UNIT-2170',  l:'fa2',     n:'Final Clean 1F FA2',                     es:[2027,12,16], ef:[2027,12,20], tf:184,  crit:false, done:false},
-{id:'UNIT-2230',  l:'fa2',     n:'Countertops 2F FA2',                     es:[2027,12,16], ef:[2027,12,28], tf:592,  crit:false, done:false},
-{id:'UNIT-2340',  l:'fa2',     n:'Finish Paint 3F FA2',                    es:[2027,12,16], ef:[2027,12,28], tf:400,  crit:false, done:false},
-{id:'UNIT-2450',  l:'fa2',     n:'Flooring 4F FA2',                        es:[2027,12,16], ef:[2027,12,28], tf:0,    crit:true,  done:false},
-{id:'COR-2110',   l:'fa2',     n:'Corridor Base/Trim 1F FA2',              es:[2027,12,16], ef:[2027,12,27], tf:536,  crit:false, done:false},
-{id:'UNIT-2175',  l:'fa2',     n:'2nd Point Up 1F FA2',                    es:[2027,12,21], ef:[2027,12,28], tf:184,  crit:false, done:false},
-{id:'PUNCH-2100', l:'fa2',     n:'CCG Pre-Punch 1F FA2',                   es:[2027,12,23], ef:[2028,1,7],   tf:184,  crit:false, done:false},
-{id:'COR-2115',   l:'fa2',     n:'Corridor 1st Point Up 1F FA2',           es:[2027,12,28], ef:[2028,1,6],   tf:536,  crit:false, done:false},
-{id:'UNIT-2180',  l:'fa2',     n:'Final Paint 1F FA2',                     es:[2027,12,29], ef:[2028,1,5],   tf:184,  crit:false, done:false},
-{id:'UNIT-2235',  l:'fa2',     n:'1st Point Up 2F FA2',                    es:[2027,12,29], ef:[2028,1,10],  tf:592,  crit:false, done:false},
-{id:'UNIT-2345',  l:'fa2',     n:'Rough Clean 3F FA2',                     es:[2027,12,29], ef:[2027,12,30], tf:400,  crit:false, done:false},
-{id:'UNIT-2455',  l:'fa2',     n:'MEP Finishes 4F FA2',                    es:[2027,12,29], ef:[2028,1,10],  tf:0,    crit:true,  done:false},
-// FIRE AREA 3 (64)
-{id:'FT-1050',    l:'fa3',     n:'Foundations FA3',                        es:[2027,3,15],  ef:[2027,4,22],  tf:16,   crit:false, done:false},
-{id:'CMU-1150',   l:'fa3',     n:'Trash Chute CMU',                        es:[2027,4,9],   ef:[2027,4,16],  tf:16,   crit:false, done:false},
-{id:'CMU-1160',   l:'fa3',     n:'CMU Mech/Elec Rooms',                    es:[2027,4,19],  ef:[2027,5,14],  tf:16,   crit:false, done:false},
-{id:'UF-3150',    l:'fa3',     n:'1F Walls + 2F Trusses FA3',              es:[2027,4,19],  ef:[2027,5,14],  tf:16,   crit:false, done:false},
-{id:'UG-1130',    l:'fa3',     n:'UG Rough-In FA3',                        es:[2027,4,9],   ef:[2027,5,14],  tf:2240, crit:false, done:false},
-{id:'CMU-1170',   l:'fa3',     n:'Elevator 3 CMU Shaft',                   es:[2027,4,23],  ef:[2027,6,4],   tf:1432, crit:false, done:false},
-{id:'MEP-3100',   l:'fa3',     n:'Stacks/Risers 1F FA3',                   es:[2027,5,12],  ef:[2027,5,24],  tf:384,  crit:false, done:false},
-{id:'SOG-1200',   l:'fa3',     n:'SOG FA3',                                es:[2027,5,14],  ef:[2027,6,25],  tf:2240, crit:false, done:false},
-{id:'UF-3250',    l:'fa3',     n:'2F Walls + 3F Trusses FA3',              es:[2027,5,17],  ef:[2027,6,14],  tf:16,   crit:false, done:false},
-{id:'MEP-3200',   l:'fa3',     n:'Stacks/Risers 2F FA3',                   es:[2027,5,25],  ef:[2027,6,7],   tf:384,  crit:false, done:false},
-{id:'MEP-3300',   l:'fa3',     n:'Stacks/Risers 3F FA3',                   es:[2027,6,8],   ef:[2027,6,18],  tf:384,  crit:false, done:false},
-{id:'MEP-3110',   l:'fa3',     n:'Tubs/Showers 1F FA3',                    es:[2027,6,10],  ef:[2027,6,22],  tf:440,  crit:false, done:false},
-{id:'UF-3350',    l:'fa3',     n:'3F Walls + 4F Trusses FA3',              es:[2027,6,15],  ef:[2027,7,9],   tf:16,   crit:false, done:false},
-{id:'MEP-3400',   l:'fa3',     n:'Stacks/Risers 4F FA3',                   es:[2027,6,21],  ef:[2027,7,1],   tf:384,  crit:false, done:false},
-{id:'MEP-3410',   l:'fa3',     n:'Tubs/Showers 4F FA3',                    es:[2027,7,2],   ef:[2027,7,15],  tf:384,  crit:false, done:false},
-{id:'UF-3450',    l:'fa3',     n:'4F Walls + Roof Trusses FA3',            es:[2027,7,12],  ef:[2027,8,4],   tf:16,   crit:false, done:false},
-{id:'UF-3550',    l:'fa3',     n:'Roof Sheathing FA3',                     es:[2027,8,5],   ef:[2027,8,25],  tf:16,   crit:false, done:false},
-{id:'MEP-3120',   l:'fa3',     n:'MEP Rough-In 1F FA3',                    es:[2027,9,2],   ef:[2027,9,15],  tf:40,   crit:false, done:false},
-{id:'MEP-3420',   l:'fa3',     n:'MEP Rough-In 4F FA3',                    es:[2027,9,16],  ef:[2027,9,29],  tf:40,   crit:false, done:false},
-{id:'UNIT-3100',  l:'fa3',     n:'Insulation Insp 1F FA3',                 es:[2027,9,16],  ef:[2027,9,22],  tf:80,   crit:false, done:false},
-{id:'UNIT-3105',  l:'fa3',     n:'Board Tape Sand 1F FA3',                 es:[2027,9,23],  ef:[2027,10,13], tf:80,   crit:false, done:false},
-{id:'MEP-3320',   l:'fa3',     n:'MEP Rough-In 3F FA3',                    es:[2027,9,30],  ef:[2027,10,12], tf:72,   crit:false, done:false},
-{id:'UNIT-3400',  l:'fa3',     n:'Insulation Insp 4F FA3',                 es:[2027,9,30],  ef:[2027,10,6],  tf:40,   crit:false, done:false},
-{id:'UNIT-3405',  l:'fa3',     n:'Board Tape Sand 4F FA3',                 es:[2027,10,7],  ef:[2027,10,27], tf:40,   crit:false, done:false},
-{id:'MEP-3220',   l:'fa3',     n:'MEP Rough-In 2F FA3',                    es:[2027,10,13], ef:[2027,10,25], tf:448,  crit:false, done:false},
-{id:'UNIT-3300',  l:'fa3',     n:'Insulation Insp 3F FA3',                 es:[2027,10,13], ef:[2027,10,19], tf:72,   crit:false, done:false},
-{id:'UNIT-3110',  l:'fa3',     n:'Prime Paint 1F FA3',                     es:[2027,10,14], ef:[2027,10,18], tf:80,   crit:false, done:false},
-{id:'COR-3100',   l:'fa3',     n:'Corridor Board/Tape 1F FA3',             es:[2027,10,14], ef:[2027,10,27], tf:904,  crit:false, done:false},
-{id:'UNIT-3305',  l:'fa3',     n:'Board Tape Sand 3F FA3',                 es:[2027,10,20], ef:[2027,11,9],  tf:72,   crit:false, done:false},
-{id:'UNIT-3200',  l:'fa3',     n:'Insulation Insp 2F FA3',                 es:[2027,10,26], ef:[2027,11,1],  tf:448,  crit:false, done:false},
-{id:'UNIT-3115',  l:'fa3',     n:'Cabinets 1F FA3',                        es:[2027,10,27], ef:[2027,11,5],  tf:32,   crit:false, done:false},
-{id:'UNIT-3410',  l:'fa3',     n:'Prime Paint 4F FA3',                     es:[2027,10,28], ef:[2027,11,1],  tf:40,   crit:false, done:false},
-{id:'COR-3400',   l:'fa3',     n:'Corridor Board/Tape 4F FA3',             es:[2027,10,28], ef:[2027,11,10], tf:592,  crit:false, done:false},
-{id:'UNIT-3205',  l:'fa3',     n:'Board Tape Sand 2F FA3',                 es:[2027,11,2],  ef:[2027,11,22], tf:448,  crit:false, done:false},
-{id:'UNIT-3413',  l:'fa3',     n:'Level Rock/Gypcrete 4F FA3',             es:[2027,11,2],  ef:[2027,11,4],  tf:40,   crit:false, done:false},
-{id:'UNIT-3120',  l:'fa3',     n:'Prehung Doors 1F FA3',                   es:[2027,11,8],  ef:[2027,11,17], tf:32,   crit:false, done:false},
-{id:'UNIT-3310',  l:'fa3',     n:'Prime Paint 3F FA3',                     es:[2027,11,10], ef:[2027,11,12], tf:72,   crit:false, done:false},
-{id:'COR-3300',   l:'fa3',     n:'Corridor Board/Tape 3F FA3',             es:[2027,11,11], ef:[2027,11,24], tf:592,  crit:false, done:false},
-{id:'UNIT-3313',  l:'fa3',     n:'Level Rock/Gypcrete 3F FA3',             es:[2027,11,15], ef:[2027,11,17], tf:72,   crit:false, done:false},
-{id:'UNIT-3125',  l:'fa3',     n:'Tile 1F FA3',                            es:[2027,11,18], ef:[2027,12,3],  tf:32,   crit:false, done:false},
-{id:'UNIT-3415',  l:'fa3',     n:'Cabinets 4F FA3',                        es:[2027,11,19], ef:[2027,12,2],  tf:40,   crit:false, done:false},
-{id:'UNIT-3210',  l:'fa3',     n:'Prime Paint 2F FA3',                     es:[2027,11,23], ef:[2027,11,29], tf:448,  crit:false, done:false},
-{id:'COR-3200',   l:'fa3',     n:'Corridor Board/Tape 2F FA3',             es:[2027,11,29], ef:[2027,12,10], tf:960,  crit:false, done:false},
-{id:'UNIT-3213',  l:'fa3',     n:'Level Rock/Gypcrete 2F FA3',             es:[2027,11,30], ef:[2027,12,2],  tf:448,  crit:false, done:false},
-{id:'UNIT-3420',  l:'fa3',     n:'Prehung Doors 4F FA3',                   es:[2027,12,3],  ef:[2027,12,14], tf:40,   crit:false, done:false},
-{id:'UNIT-3130',  l:'fa3',     n:'Countertops 1F FA3',                     es:[2027,12,6],  ef:[2027,12,15], tf:32,   crit:false, done:false},
-{id:'UNIT-3315',  l:'fa3',     n:'Cabinets 3F FA3',                        es:[2027,12,6],  ef:[2027,12,15], tf:72,   crit:false, done:false},
-{id:'UNIT-3425',  l:'fa3',     n:'Tile 4F FA3',                            es:[2027,12,15], ef:[2027,12,29], tf:40,   crit:false, done:false},
-{id:'UNIT-3135',  l:'fa3',     n:'1st Point Up 1F FA3',                    es:[2027,12,16], ef:[2027,12,28], tf:32,   crit:false, done:false},
-{id:'UNIT-3320',  l:'fa3',     n:'Prehung Doors 3F FA3',                   es:[2027,12,16], ef:[2027,12,28], tf:72,   crit:false, done:false},
-{id:'UNIT-3215',  l:'fa3',     n:'Cabinets 2F FA3',                        es:[2027,12,17], ef:[2027,12,29], tf:448,  crit:false, done:false},
-{id:'UNIT-3140',  l:'fa3',     n:'Finish Paint 1F FA3',                    es:[2027,12,29], ef:[2028,1,10],  tf:32,   crit:false, done:false},
-{id:'UNIT-3325',  l:'fa3',     n:'Tile 3F FA3',                            es:[2027,12,29], ef:[2028,1,12],  tf:72,   crit:false, done:false},
-{id:'UNIT-3220',  l:'fa3',     n:'Prehung Doors 2F FA3',                   es:[2027,12,30], ef:[2028,1,11],  tf:448,  crit:false, done:false},
-{id:'UNIT-3430',  l:'fa3',     n:'Countertops 4F FA3',                     es:[2027,12,30], ef:[2028,1,11],  tf:40,   crit:false, done:false},
-// FIRE AREA 4-2 (44)
-{id:'FT-1060',    l:'fa42',    n:'Foundations FA4-2',                      es:[2027,4,23],  ef:[2027,5,13],  tf:736,  crit:false, done:false},
-{id:'UG-1140',    l:'fa42',    n:'UG Rough-In FA4-2',                      es:[2027,5,17],  ef:[2027,6,3],   tf:2368, crit:false, done:false},
-{id:'SOG-1210',   l:'fa42',    n:'SOG FA4-2',                              es:[2027,7,1],   ef:[2027,7,13],  tf:2240, crit:false, done:false},
-{id:'UF-4170',    l:'fa42',    n:'1F Walls + 2F Trusses FA4-2',            es:[2027,8,26],  ef:[2027,9,10],  tf:368,  crit:false, done:false},
-{id:'UF-4270',    l:'fa42',    n:'2F Walls + 3F Trusses FA4-2',            es:[2027,9,13],  ef:[2027,9,22],  tf:368,  crit:false, done:false},
-{id:'UF-4370',    l:'fa42',    n:'3F Walls + 4F Trusses FA4-2',            es:[2027,9,23],  ef:[2027,10,6],  tf:368,  crit:false, done:false},
-{id:'MEP-4100',   l:'fa42',    n:'Stacks/Risers 1F FA4-2',                 es:[2027,10,7],  ef:[2027,10,14], tf:992,  crit:false, done:false},
-{id:'UF-4470',    l:'fa42',    n:'4F Walls + Roof Trusses FA4-2',          es:[2027,10,7],  ef:[2027,10,18], tf:368,  crit:false, done:false},
-{id:'MEP-4200',   l:'fa42',    n:'Stacks/Risers 2F FA4-2',                 es:[2027,10,15], ef:[2027,10,22], tf:992,  crit:false, done:false},
-{id:'UF-4570',    l:'fa42',    n:'Roof Sheathing FA4-2',                   es:[2027,10,19], ef:[2027,11,3],  tf:368,  crit:false, done:false},
-{id:'MEP-4300',   l:'fa42',    n:'Stacks/Risers 3F FA4-2',                 es:[2027,10,25], ef:[2027,11,1],  tf:992,  crit:false, done:false},
-{id:'MEP-4400',   l:'fa42',    n:'Stacks/Risers 4F FA4-2',                 es:[2027,11,2],  ef:[2027,11,9],  tf:992,  crit:false, done:false},
-{id:'MEP-4410',   l:'fa42',    n:'Tubs/Showers 4F FA4-2',                  es:[2027,11,10], ef:[2027,11,17], tf:992,  crit:false, done:false},
-{id:'MEP-4420',   l:'fa42',    n:'MEP Rough-In 4F FA4-2',                  es:[2027,11,18], ef:[2027,11,29], tf:992,  crit:false, done:false},
-{id:'UNIT-4400',  l:'fa42',    n:'Insulation Insp 4F FA4-2',               es:[2027,11,23], ef:[2027,11,29], tf:992,  crit:false, done:false},
-{id:'MEP-4320',   l:'fa42',    n:'MEP Rough-In 3F FA4-2',                  es:[2027,11,30], ef:[2027,12,7],  tf:1000, crit:false, done:false},
-{id:'UNIT-4405',  l:'fa42',    n:'Board Tape Sand 4F FA4-2',               es:[2027,11,30], ef:[2027,12,6],  tf:992,  crit:false, done:false},
-{id:'UNIT-4410',  l:'fa42',    n:'Prime Paint 4F FA4-2',                   es:[2027,12,7],  ef:[2027,12,7],  tf:992,  crit:false, done:false},
-{id:'COR-4400',   l:'fa42',    n:'Corridor Board/Tape 4F FA4-2',           es:[2027,12,7],  ef:[2027,12,13], tf:1304, crit:false, done:false},
-{id:'MEP-4220',   l:'fa42',    n:'MEP Rough-In 2F FA4-2',                  es:[2027,12,8],  ef:[2027,12,15], tf:1016, crit:false, done:false},
-{id:'UNIT-4300',  l:'fa42',    n:'Insulation Insp 3F FA4-2',               es:[2027,12,8],  ef:[2027,12,10], tf:1000, crit:false, done:false},
-{id:'UNIT-4413',  l:'fa42',    n:'Level Rock/Gypcrete 4F FA4-2',           es:[2027,12,8],  ef:[2027,12,10], tf:992,  crit:false, done:false},
-{id:'UNIT-4305',  l:'fa42',    n:'Board Tape Sand 3F FA4-2',               es:[2027,12,13], ef:[2027,12,17], tf:1000, crit:false, done:false},
-{id:'COR-4300',   l:'fa42',    n:'Corridor Board/Tape 3F FA4-2',           es:[2027,12,14], ef:[2027,12,20], tf:1304, crit:false, done:false},
-{id:'MEP-4120',   l:'fa42',    n:'MEP Rough-In 1F FA4-2',                  es:[2027,12,16], ef:[2027,12,23], tf:1128, crit:false, done:false},
-{id:'UNIT-4200',  l:'fa42',    n:'Insulation Insp 2F FA4-2',               es:[2027,12,16], ef:[2027,12,20], tf:1016, crit:false, done:false},
-{id:'UNIT-4310',  l:'fa42',    n:'Prime Paint 3F FA4-2',                   es:[2027,12,20], ef:[2027,12,20], tf:1000, crit:false, done:false},
-{id:'UNIT-4205',  l:'fa42',    n:'Board Tape Sand 2F FA4-2',               es:[2027,12,21], ef:[2027,12,28], tf:1016, crit:false, done:false},
-{id:'UNIT-4313',  l:'fa42',    n:'Level Rock/Gypcrete 3F FA4-2',           es:[2027,12,21], ef:[2027,12,23], tf:1000, crit:false, done:false},
-{id:'COR-4200',   l:'fa42',    n:'Corridor Board/Tape 2F FA4-2',           es:[2027,12,21], ef:[2027,12,28], tf:1320, crit:false, done:false},
-{id:'UNIT-4100',  l:'fa42',    n:'Insulation Insp 1F FA4-2',               es:[2027,12,27], ef:[2027,12,29], tf:1128, crit:false, done:false},
-{id:'UNIT-4210',  l:'fa42',    n:'Prime Paint 2F FA4-2',                   es:[2027,12,29], ef:[2027,12,29], tf:1016, crit:false, done:false},
-{id:'COR-4100',   l:'fa42',    n:'Corridor Board/Tape 1F FA4-2',           es:[2027,12,29], ef:[2028,1,5],   tf:1416, crit:false, done:false},
-{id:'UNIT-4105',  l:'fa42',    n:'Board Tape Sand 1F FA4-2',               es:[2027,12,30], ef:[2028,1,6],   tf:1128, crit:false, done:false},
-{id:'UNIT-4213',  l:'fa42',    n:'Level Rock/Gypcrete 2F FA4-2',           es:[2027,12,30], ef:[2028,1,4],   tf:1016, crit:false, done:false},
-// EXTERIOR (16)
-{id:'ROOF-2000',  l:'exterior',n:'Roofing Vapor Barrier FA2',              es:[2027,7,7],   ef:[2027,7,13],  tf:0,    crit:true,  done:false},
-{id:'ROOF-5500',  l:'exterior',n:'Roofing Vapor Barrier FA4-1',            es:[2027,8,25],  ef:[2027,8,31],  tf:16,   crit:false, done:false},
-{id:'ROOF-3000',  l:'exterior',n:'Roofing Vapor Barrier FA3',              es:[2027,8,26],  ef:[2027,9,1],   tf:40,   crit:false, done:false},
-{id:'WIN-1570',   l:'exterior',n:'Windows FA4-1',                          es:[2027,9,1],   ef:[2027,9,15],  tf:16,   crit:false, done:false},
-{id:'BRK-1610',   l:'exterior',n:'Masonry FA4-1',                          es:[2027,9,9],   ef:[2027,10,22], tf:16,   crit:false, done:false},
-{id:'WIN-1580',   l:'exterior',n:'Windows FA2',                            es:[2027,9,16],  ef:[2027,10,8],  tf:400,  crit:false, done:false},
-{id:'BRK-1620',   l:'exterior',n:'Masonry FA2',                            es:[2027,10,25], ef:[2027,12,10], tf:240,  crit:false, done:false},
-{id:'ST-1000',    l:'exterior',n:'Storefront FA4-1 Amenity',               es:[2027,10,25], ef:[2027,12,17], tf:1488, crit:false, done:false},
-{id:'SID-1660',   l:'exterior',n:'Siding FA4-1',                           es:[2027,10,25], ef:[2027,12,10], tf:16,   crit:false, done:false},
-{id:'WIN-1590',   l:'exterior',n:'Windows FA3',                            es:[2027,11,4],  ef:[2027,12,2],  tf:368,  crit:false, done:false},
-{id:'ROOF-4000',  l:'exterior',n:'Roofing Vapor Barrier FA4-2',            es:[2027,11,4],  ef:[2027,11,10], tf:1032, crit:false, done:false},
-{id:'SITE-1700',  l:'exterior',n:'Pool Construction',                      es:[2027,11,12], ef:[2028,1,24],  tf:16,   crit:false, done:false},
-{id:'WIN-1600',   l:'exterior',n:'Windows FA4-2',                          es:[2027,12,3],  ef:[2027,12,16], tf:488,  crit:false, done:false},
-{id:'NCL-1140',   l:'exterior',n:'Re-grade Site (Grocer)',                 es:[2027,12,13], ef:[2028,1,3],   tf:408,  crit:false, done:false},
-{id:'BRK-1630',   l:'exterior',n:'Masonry FA3',                            es:[2027,12,13], ef:[2028,1,24],  tf:240,  crit:false, done:false},
-{id:'SID-1670',   l:'exterior',n:'Siding FA2',                             es:[2027,12,13], ef:[2028,1,24],  tf:240,  crit:false, done:false},
+const ACTS_OVERALL = [
+// ── INFRA / ROADS ──
+{id:'104',       l:'infra', n:'Mobilization',                             es:[2026,6,1],  ef:[2026,6,12],  tf:0,    crit:true,  src:'Overall'},
+{id:'110',       l:'infra', n:'Survey/Layout — Perimeter Controls',       es:[2026,6,15], ef:[2026,6,19],  tf:0,    crit:true,  src:'Overall'},
+{id:'111',       l:'infra', n:'Install Perimeter SEC Measures',           es:[2026,6,22], ef:[2026,7,6],   tf:0,    crit:true,  src:'Overall'},
+{id:'112',       l:'infra', n:'Clearing for SEC — Roads Lot 2/4/6',       es:[2026,7,2],  ef:[2026,8,6],   tf:0,    crit:true,  src:'Overall'},
+{id:'163',       l:'infra', n:'Dynamic Compaction — Lot 4 South',         es:[2026,7,24], ef:[2026,9,3],   tf:0,    crit:true,  src:'Overall'},
+{id:'113',       l:'infra', n:'Mass Grading & Stripping',                  es:[2026,7,31], ef:[2026,10,16], tf:0,    crit:true,  src:'Overall'},
+{id:'143',       l:'infra', n:'Sanitary — East St. to Lot 6',             es:[2026,8,7],  ef:[2026,9,18],  tf:3175, crit:false, src:'Overall'},
+{id:'133',       l:'infra', n:'Storm — Pug Mill to SWM Feature A&B',      es:[2026,9,21], ef:[2026,10,9],  tf:3175, crit:false, src:'Overall'},
+{id:'153',       l:'infra', n:'Water — East St. to Lot 4 Road Infra',     es:[2026,10,12],ef:[2026,11,6],  tf:3175, crit:false, src:'Overall'},
+{id:'123',       l:'infra', n:'Road Construction — Brickworks St.',        es:[2026,10,19],ef:[2026,12,8],  tf:3359, crit:false, src:'Overall'},
+{id:'122',       l:'infra', n:'Dry Utilities — Brickworks St.',            es:[2026,11,9], ef:[2026,12,1],  tf:3175, crit:false, src:'Overall'},
+{id:'129',       l:'infra', n:'Sidewalks/HC Ramps — Brickworks St.',       es:[2026,12,9], ef:[2026,12,30], tf:3679, crit:false, src:'Overall'},
+{id:'140',       l:'infra', n:'Dry Utilities — Pug Mill St.',              es:[2026,12,2], ef:[2026,12,8],  tf:3175, crit:false, src:'Overall'},
+{id:'141',       l:'infra', n:'Demo Asphalt — Pug Mill (Verizon)',         es:[2026,12,9], ef:[2026,12,11], tf:3175, crit:false, src:'Overall'},
+{id:'142',       l:'infra', n:'Road Construction — Pug Mill St.',          es:[2026,12,14],ef:[2027,1,26],  tf:3175, crit:false, src:'Overall'},
+{id:'158',       l:'infra', n:'Dry Utilities — Lower Depot St.',           es:[2026,12,9], ef:[2026,12,15], tf:3399, crit:false, src:'Overall'},
+{id:'130',       l:'infra', n:'Landscaping — Brickworks St.',              es:[2026,12,24],ef:[2027,1,6],   tf:3687, crit:false, src:'Overall'},
+{id:'131',       l:'infra', n:'Install Street Lights — Brickworks St.',    es:[2026,12,31],ef:[2027,1,7],   tf:3679, crit:false, src:'Overall'},
+{id:'192',       l:'infra', n:'Layout — Monocacy Right-In / Right-Out',    es:[2026,8,7],  ef:[2026,8,11],  tf:40,   crit:false, src:'Overall'},
+{id:'193',       l:'infra', n:'Install Traffic Controls — Monocacy',       es:[2026,8,12], ef:[2026,8,14],  tf:40,   crit:false, src:'Overall'},
+{id:'194',       l:'infra', n:'SEC Measures — Monocacy Decel',             es:[2026,8,17], ef:[2026,8,18],  tf:40,   crit:false, src:'Overall'},
+{id:'195',       l:'infra', n:'Clear & Grub — Monocacy Decel',             es:[2026,8,19], ef:[2026,8,25],  tf:40,   crit:false, src:'Overall'},
+{id:'196',       l:'infra', n:'Grading — Monocacy Decel',                  es:[2026,8,26], ef:[2026,9,4],   tf:40,   crit:false, src:'Overall'},
+{id:'197',       l:'infra', n:'Waterline Tie-In from Monocacy',            es:[2026,9,8],  ef:[2026,9,11],  tf:40,   crit:false, src:'Overall'},
+{id:'198',       l:'infra', n:'Dry Utilities — Monocacy Decel',            es:[2026,9,14], ef:[2026,9,25],  tf:2943, crit:false, src:'Overall'},
+{id:'199',       l:'infra', n:'Curb & Gutter — Monocacy Decel',            es:[2026,9,28], ef:[2026,10,9],  tf:2943, crit:false, src:'Overall'},
+{id:'200',       l:'infra', n:'Concrete Aprons — Monocacy Decel',          es:[2026,10,12],ef:[2026,10,23], tf:2943, crit:false, src:'Overall'},
+{id:'201',       l:'infra', n:'Fine Grading — Monocacy Decel',             es:[2026,10,26],ef:[2026,11,2],  tf:2943, crit:false, src:'Overall'},
+{id:'202',       l:'infra', n:'Stone/Base Paving — Monocacy Decel',        es:[2026,11,3], ef:[2026,11,10], tf:2943, crit:false, src:'Overall'},
+{id:'203',       l:'infra', n:'Striping/Signage — Monocacy Decel',         es:[2026,11,11],ef:[2026,11,17], tf:2943, crit:false, src:'Overall'},
+{id:'204',       l:'infra', n:'Inspections — Monocacy Decel',              es:[2026,11,18],ef:[2026,11,24], tf:2943, crit:false, src:'Overall'},
+{id:'148',       l:'infra', n:'Sidewalks — Pug Mill St.',                  es:[2027,1,27], ef:[2027,2,9],   tf:3255, crit:false, src:'Overall'},
+{id:'159',       l:'infra', n:'Road Construction — Lower Depot St.',       es:[2027,1,27], ef:[2027,2,23],  tf:3175, crit:false, src:'Overall'},
+{id:'149',       l:'infra', n:'Landscaping — Pug Mill St.',                es:[2027,2,10], ef:[2027,2,16],  tf:3295, crit:false, src:'Overall'},
+{id:'150',       l:'infra', n:'Install Street Lights — Pug Mill St.',      es:[2027,2,10], ef:[2027,2,17],  tf:3447, crit:false, src:'Overall'},
+{id:'151',       l:'infra', n:'Inspections & Turnover — Pug Mill St.',     es:[2027,2,18], ef:[2027,3,3],   tf:3447, crit:false, src:'Overall'},
+{id:'165',       l:'infra', n:'Sidewalks — Lower Depot St.',               es:[2027,2,24], ef:[2027,3,9],   tf:3175, crit:false, src:'Overall'},
+{id:'106',       l:'infra', n:'Layout — Afforestation Area',               es:[2027,3,15], ef:[2027,3,23],  tf:3175, crit:false, src:'Overall'},
+{id:'107',       l:'infra', n:'Protective Fencing — Afforestation',        es:[2027,3,22], ef:[2027,4,9],   tf:3175, crit:false, src:'Overall'},
+{id:'108',       l:'infra', n:'Tree Installation — Afforestation',         es:[2027,4,12], ef:[2027,4,20],  tf:3175, crit:false, src:'Overall'},
+
+// ── RETAIL LOT 4 ──
+{id:'176',       l:'retail', n:'Storm Line — Retail Lot 4',               es:[2026,9,4],  ef:[2026,10,9],  tf:1575, crit:false, src:'Overall'},
+{id:'177',       l:'retail', n:'Sanitary — Retail Lot 4 & Lot 6 Laterals',es:[2026,10,5], ef:[2026,10,28], tf:1575, crit:false, src:'Overall'},
+{id:'178',       l:'retail', n:'Water — Monocacy Tie-In & Retail Main',   es:[2026,10,29],ef:[2026,11,18], tf:1575, crit:false, src:'Overall'},
+{id:'218',       l:'retail', n:'Water — Lot 4 Private Loop',              es:[2026,11,19],ef:[2026,12,18], tf:1575, crit:false, src:'Overall'},
+{id:'171',       l:'retail', n:'Survey & Layout — Retail Lot 4',          es:[2026,10,19],ef:[2026,10,21], tf:1495, crit:false, src:'Overall'},
+{id:'179',       l:'retail', n:'Dry Utilities — Retail Site',             es:[2026,12,21],ef:[2027,2,2],   tf:1575, crit:false, src:'Overall'},
+{id:'180',       l:'retail', n:'Fine Grading — Retail Site',              es:[2026,12,21],ef:[2027,1,19],  tf:1575, crit:false, src:'Overall'},
+{id:'181',       l:'retail', n:'Curb & Gutter — Retail Site',             es:[2027,1,20], ef:[2027,3,2],   tf:1575, crit:false, src:'Overall'},
+{id:'182',       l:'retail', n:'Stone/Base Paving — Retail Site',         es:[2027,3,3],  ef:[2027,4,6],   tf:1575, crit:false, src:'Overall'},
+{id:'183',       l:'retail', n:'Finish Paving — Retail Site',             es:[2027,4,7],  ef:[2027,5,4],   tf:1695, crit:false, src:'Overall'},
+{id:'185',       l:'retail', n:'Sidewalks — Retail Site',                 es:[2027,4,7],  ef:[2027,5,25],  tf:1575, crit:false, src:'Overall'},
+{id:'184',       l:'retail', n:'Striping/Signage — Retail Site',          es:[2027,5,5],  ef:[2027,5,25],  tf:1775, crit:false, src:'Overall'},
+{id:'187',       l:'retail', n:'Install Light Poles — Retail Site',       es:[2027,5,5],  ef:[2027,5,25],  tf:1775, crit:false, src:'Overall'},
+{id:'188',       l:'retail', n:'Landscaping/Amenities — Retail Site',     es:[2027,5,5],  ef:[2027,6,9],   tf:1695, crit:false, src:'Overall'},
+{id:'186',       l:'retail', n:'Hardscapes — Retail #1 & #2 Plaza',       es:[2027,5,26], ef:[2027,6,30],  tf:1575, crit:false, src:'Overall'},
+{id:'189',       l:'retail', n:'Inspections — Retail Site',               es:[2027,7,1],  ef:[2027,7,15],  tf:1575, crit:false, src:'Overall'},
+{id:'190',       l:'retail', n:'Punch / Turnover — Retail Site',          es:[2027,7,16], ef:[2027,7,29],  tf:1575, crit:false, src:'Overall'},
+{id:'270',       l:'retail', n:'Construction — Retail Bldg #1',           es:[2026,11,4], ef:[2027,6,17],  tf:1807, crit:false, src:'Overall'},
+{id:'253',       l:'retail', n:'Construction — Retail Bldg #2',           es:[2026,11,6], ef:[2027,8,10],  tf:1495, crit:false, src:'Overall'},
+{id:'221',       l:'retail', n:'Construction — Retail Bldg #4',           es:[2027,5,28], ef:[2027,11,17], tf:1999, crit:false, src:'Overall'},
+{id:'209',       l:'retail', n:'Pad Delivery — Retail Bldg #1',           es:[2026,11,2], ef:[2026,11,3],  tf:1495, crit:false, src:'Overall'},
+{id:'208',       l:'retail', n:'Pad Delivery — Retail Bldg #2',           es:[2026,11,4], ef:[2026,11,5],  tf:1495, crit:false, src:'Overall'},
+{id:'207',       l:'retail', n:'Pad Delivery — Retail #3 (Pad Only)',     es:[2026,11,6], ef:[2026,11,9],  tf:3079, crit:false, src:'Overall'},
+{id:'210',       l:'retail', n:'Pad Delivery — Pad Site #2',              es:[2026,11,10],ef:[2026,11,11], tf:3079, crit:false, src:'Overall'},
+{id:'211',       l:'retail', n:'Pad Delivery — Bldg 4 / Pad Site #1',    es:[2026,11,12],ef:[2026,11,13], tf:3079, crit:false, src:'Overall'},
+
+// ── GROCER ──
+{id:'206',       l:'grocer', n:'Pad Delivery — Grocer Bldg.',             es:[2026,10,22],ef:[2026,10,30], tf:1495, crit:false, src:'Overall'},
+{id:'214',       l:'grocer', n:'Shell & LL Construction — Grocer',        es:[2027,3,1],  ef:[2027,12,2],  tf:879,  crit:false, src:'Overall'},
+{id:'234',       l:'grocer', n:'Fit-Out (by Tenant) — Grocer',            es:[2028,1,24], ef:[2028,7,25],  tf:607,  crit:false, src:'Overall'},
+
+// ── OWNER MILESTONES (FinMile + LOE) ──
+{id:'A1040',     l:'owner',  n:'Construction Starts — Mobilization ✦',   es:[2026,6,1],  ef:[2026,6,1],   tf:4983, crit:false, mstone:true, src:'Overall'},
+{id:'M3001',     l:'owner',  n:'NVR Lot Access — 60 Workdays ✦',         es:[2026,8,24], ef:[2026,8,24],  tf:4503, crit:false, mstone:true, src:'Overall'},
+{id:'A1000',     l:'owner',  n:'Brickworks St. Open for Traffic ✦',      es:[2027,1,21], ef:[2027,1,21],  tf:3679, crit:false, mstone:true, src:'Overall'},
+{id:'PW0200',    l:'owner',  n:'Perm Power — Infra Spine ✦',             es:[2027,1,8],  ef:[2027,1,8],   tf:3759, crit:false, mstone:true, src:'Overall'},
+{id:'PW0400',    l:'owner',  n:'Perm Power — Shell Buildings ✦',         es:[2027,1,14], ef:[2027,1,14],  tf:3727, crit:false, mstone:true, src:'Overall'},
+{id:'M5001',     l:'owner',  n:'Access to Shopping Center Approved ✦',   es:[2027,3,26], ef:[2027,3,26],  tf:3311, crit:false, mstone:true, src:'Overall'},
+{id:'M6001',     l:'owner',  n:'LL Completed MDE / VCP Requirements',    es:[2027,5,5],  ef:[2027,5,5],   tf:3095, crit:false, mstone:true, loe:true, src:'Overall'},
+{id:'M0501',     l:'owner',  n:'Rentable Space Ready — Retail #1 ✦',     es:[2027,5,27], ef:[2027,5,27],  tf:2967, crit:false, mstone:true, src:'Overall'},
+{id:'A1060',     l:'owner',  n:'Retail Bldg #1 Substantially Complete ✦',es:[2027,6,17], ef:[2027,6,17],  tf:2847, crit:false, mstone:true, src:'Overall'},
+{id:'PW0300',    l:'owner',  n:'Perm Power — Retail Site ✦',             es:[2027,7,14], ef:[2027,7,14],  tf:2711, crit:false, mstone:true, src:'Overall'},
+{id:'M0251',     l:'owner',  n:'Rentable Space Ready — Retail #2 ✦',     es:[2027,7,14], ef:[2027,7,14],  tf:2711, crit:false, mstone:true, src:'Overall'},
+{id:'M7001',     l:'owner',  n:'Common Area Shopping — Lot 4 Complete ✦',es:[2027,7,16], ef:[2027,7,16],  tf:2695, crit:false, mstone:true, src:'Overall'},
+{id:'M1001',     l:'owner',  n:'LL Delivers Water Tight Space',          es:[2027,8,18], ef:[2027,8,18],  tf:2511, crit:false, mstone:true, loe:true, src:'Overall'},
+{id:'A1070',     l:'owner',  n:'Retail Bldg #2 Substantially Complete ✦',es:[2027,8,10], ef:[2027,8,10],  tf:2551, crit:false, mstone:true, src:'Overall'},
+{id:'M2001',     l:'owner',  n:'LL Provides Leasing SF Certification',   es:[2027,10,14],ef:[2027,10,14], tf:2191, crit:false, mstone:true, loe:true, src:'Overall'},
+{id:'M0261',     l:'owner',  n:'Rentable Space Ready — Retail #4 ✦',     es:[2027,10,27],ef:[2027,10,27], tf:2119, crit:false, mstone:true, src:'Overall'},
+{id:'M8001',     l:'owner',  n:'Final LL Work Completion Date Notice',   es:[2027,11,2], ef:[2027,11,2],  tf:-3208,crit:false, mstone:true, loe:true, src:'Overall', neg:true},
+{id:'A1080',     l:'owner',  n:'Retail Bldg #4 Substantially Complete ✦',es:[2027,11,17],ef:[2027,11,17], tf:1999, crit:false, mstone:true, src:'Overall'},
+{id:'M17001',    l:'owner',  n:'Water Tight — 332 Residential Units ✦',  es:[2027,12,17],ef:[2027,12,17], tf:1839, crit:false, mstone:true, src:'Overall'},
+{id:'M9001',     l:'owner',  n:'Initial Co-Tenancy Satisfaction Date',   es:[2027,12,3], ef:[2027,12,3],  tf:1919, crit:false, mstone:true, loe:true, src:'Overall'},
+{id:'M10001',    l:'owner',  n:'Estimated Final LL Work Completion',     es:[2027,12,3], ef:[2027,12,3],  tf:1919, crit:false, mstone:true, loe:true, src:'Overall'},
+{id:'M11001',    l:'owner',  n:'Final LL Work Complete Date Notice',     es:[2027,12,3], ef:[2027,12,3],  tf:1919, crit:false, mstone:true, loe:true, src:'Overall'},
+{id:'M12001',    l:'owner',  n:'LL Work Completion Certification',       es:[2027,12,3], ef:[2027,12,3],  tf:1919, crit:false, mstone:true, loe:true, src:'Overall'},
+{id:'M14001',    l:'owner',  n:'Tenant Turnover Date',                   es:[2027,12,3], ef:[2027,12,3],  tf:1919, crit:false, mstone:true, loe:true, src:'Overall'},
+{id:'M15001',    l:'owner',  n:'LL Receives City Approval to Occupy',    es:[2027,12,3], ef:[2027,12,3],  tf:-3376,crit:false, mstone:true, loe:true, src:'Overall', neg:true},
 ];
 
-// Key arrows — critical path + major cross-lane logic
+// ─────────────────────────────────────────────────────────────────
+// MFB MILESTONE OVERLAY PINS — from Overall schedule (MFB-M* series)
+// These draw vertical dashed lines across all MF lanes
+// ─────────────────────────────────────────────────────────────────
+const MFB_PINS = [
+  {id:'MFB-M011', d:[2026,8,29],  n:'MF Permit Approved'},
+  {id:'MFB-M041', d:[2026,10,2],  n:'E&SC Inspection'},
+  {id:'MFB-M051', d:[2026,10,14], n:'Bldg Pad Delivery'},
+  {id:'MFB-M071', d:[2027,1,12],  n:'Precast Crane Start'},
+  {id:'MFB-M081', d:[2027,5,14],  n:'Foundation Complete'},
+  {id:'MFB-M091', d:[2027,7,14],  n:'SOG Complete'},
+  {id:'MFB-M101', d:[2027,11,4],  n:'Topping Out'},
+  {id:'MFB-M111', d:[2027,11,11], n:'Roof Watertight'},
+  {id:'MFB-M121', d:[2027,12,17], n:'Skin Watertight'},
+  {id:'MFB-SID',  d:[2028,1,24],  n:'Facade Facing Grocer'},
+];
+
+// ─────────────────────────────────────────────────────────────────
+// MF REV 02 ACTIVITY DATA (unchanged from Rev 02 baseline)
+// ─────────────────────────────────────────────────────────────────
+const ACTS_MF = [
+// SITE
+{id:'PP-1030',   l:'site',    n:'Release Switchgear',                     es:[2026,7,22],  ef:[2027,4,6],   tf:1224, crit:false},
+{id:'SITE-04',   l:'site',    n:'Mobilization / E&S Control',             es:[2026,9,28],  ef:[2026,9,28],  tf:0,    crit:true},
+{id:'SITE-14',   l:'site',    n:'County E&S Inspection',                  es:[2026,9,28],  ef:[2026,10,1],  tf:0,    crit:true},
+{id:'M041',      l:'site',    n:'E&S Complete ✦',                         es:[2026,10,2],  ef:[2026,10,2],  tf:4280, crit:false},
+{id:'SITE-24',   l:'site',    n:'Site Grading (Early Work)',               es:[2026,10,2],  ef:[2026,10,13], tf:0,    crit:true},
+{id:'M051',      l:'site',    n:'Pad Delivery ✦',                         es:[2026,10,14], ef:[2026,10,14], tf:4216, crit:false},
+{id:'SITE-34',   l:'site',    n:'Bldg/Garage Pad Delivery',                es:[2026,10,14], ef:[2026,10,14], tf:0,    crit:true},
+{id:'SU-1000',   l:'site',    n:'Create Staging Area',                     es:[2026,10,14], ef:[2026,10,20], tf:1120, crit:false},
+{id:'SU-1010',   l:'site',    n:'Sanitary Sewer',                          es:[2026,10,21], ef:[2026,11,16], tf:1120, crit:false},
+{id:'SU-1020',   l:'site',    n:'Storm Sewer',                             es:[2026,11,17], ef:[2027,1,13],  tf:1120, crit:false},
+{id:'M071',      l:'site',    n:'Crane Erection Started ✦',               es:[2027,1,12],  ef:[2027,1,12],  tf:3736, crit:false},
+{id:'SU-1030',   l:'site',    n:'Water Line',                              es:[2027,1,14],  ef:[2027,2,2],   tf:1120, crit:false},
+{id:'SU-1040',   l:'site',    n:'First Energy Ductbank',                   es:[2027,2,3],   ef:[2027,3,9],   tf:1120, crit:false},
+{id:'SU-1050',   l:'site',    n:'Telecomm Ductbank',                       es:[2027,3,10],  ef:[2027,4,5],   tf:1120, crit:false},
+{id:'PP-1040',   l:'site',    n:'Install Switchgear',                      es:[2027,4,7],   ef:[2027,4,20],  tf:1224, crit:false},
+{id:'PP-1050',   l:'site',    n:'TPF Electrical Room',                     es:[2027,4,21],  ef:[2027,4,27],  tf:1224, crit:false},
+{id:'PP-1060',   l:'site',    n:'First Energy Install Cables',             es:[2027,4,28],  ef:[2027,6,16],  tf:1224, crit:false},
+{id:'M081',      l:'site',    n:'Foundations Complete ✦',                 es:[2027,5,14],  ef:[2027,5,14],  tf:3032, crit:false},
+{id:'FT-1070',   l:'site',    n:'Bottoming Out ✦',                        es:[2027,5,14],  ef:[2027,5,14],  tf:2504, crit:false},
+{id:'PP-1070',   l:'site',    n:'Perm Power / House Meter',                es:[2027,6,17],  ef:[2027,6,17],  tf:1224, crit:false},
+{id:'PP-1080',   l:'site',    n:'Install Meters / Hot Check',              es:[2027,6,17],  ef:[2027,6,30],  tf:1224, crit:false},
+{id:'M061',      l:'site',    n:'Temp Power ✦',                           es:[2027,6,21],  ef:[2027,6,21],  tf:680,  crit:false},
+{id:'PP-1000',   l:'site',    n:'Temporary Power Established',             es:[2027,6,21],  ef:[2027,6,21],  tf:680,  crit:false},
+{id:'M131',      l:'site',    n:'Permanent Power ✦',                      es:[2027,7,1],   ef:[2027,7,1],   tf:2768, crit:false},
+{id:'PP-1090',   l:'site',    n:'Perm Power Energized',                    es:[2027,7,1],   ef:[2027,7,1],   tf:2768, crit:false},
+{id:'M091',      l:'site',    n:'SOG Complete ✦',                         es:[2027,7,14],  ef:[2027,7,14],  tf:2704, crit:false},
+{id:'SOG-1220',  l:'site',    n:'SOG Complete (all FAs)',                  es:[2027,7,14],  ef:[2027,7,14],  tf:2240, crit:false},
+{id:'M101',      l:'site',    n:'Topping Out ✦',                          es:[2027,11,4],  ef:[2027,11,4],  tf:2064, crit:false},
+{id:'M111',      l:'site',    n:'Roof Watertight ✦',                      es:[2027,11,11], ef:[2027,11,11], tf:2024, crit:false},
+{id:'M121',      l:'site',    n:'Skin Watertight ✦',                      es:[2027,12,17], ef:[2027,12,17], tf:1832, crit:false},
+// GARAGE
+{id:'PRE-18001', l:'garage',  n:'CCG Purchasing / Release Subs',          es:[2026,6,2],   ef:[2026,10,7],  tf:1224, crit:false},
+{id:'PRE-3150',  l:'garage',  n:'Precast Fabrication',                    es:[2026,8,11],  ef:[2027,1,4],   tf:56,   crit:false},
+{id:'PG-301A',   l:'garage',  n:'Aggregate Piers',                        es:[2026,10,15], ef:[2026,11,3],  tf:0,    crit:true},
+{id:'PG-301B',   l:'garage',  n:'Concrete Footings',                      es:[2026,11,4],  ef:[2026,12,9],  tf:0,    crit:true},
+{id:'PG-301C',   l:'garage',  n:'Retaining Walls',                        es:[2026,11,18], ef:[2026,12,16], tf:16,   crit:false},
+{id:'PG-301D',   l:'garage',  n:'Damproofing Walls',                      es:[2026,12,22], ef:[2027,1,4],   tf:16,   crit:false},
+{id:'PG-301E',   l:'garage',  n:'Backfill Walls',                         es:[2027,1,5],   ef:[2027,1,12],  tf:16,   crit:false},
+{id:'PG-302',    l:'garage',  n:'Crane Erection',                         es:[2027,1,12],  ef:[2027,1,18],  tf:16,   crit:false},
+{id:'PG-303',    l:'garage',  n:'Precast Erection',                       es:[2027,1,19],  ef:[2027,4,8],   tf:16,   crit:false},
+{id:'PG-313',    l:'garage',  n:'UG Plumbing',                            es:[2027,4,9],   ef:[2027,4,22],  tf:1376, crit:false},
+{id:'PG-323',    l:'garage',  n:'Slab on Grade',                          es:[2027,4,23],  ef:[2027,5,20],  tf:1376, crit:false},
+{id:'PG-333',    l:'garage',  n:'Finish & Caulk Precast',                 es:[2027,4,23],  ef:[2027,5,20],  tf:1624, crit:false},
+{id:'PG-343',    l:'garage',  n:'Finish MEP',                             es:[2027,5,21],  ef:[2027,7,19],  tf:1672, crit:false},
+{id:'ELEV-001',  l:'garage',  n:'Elevator 1 — Garage Service',            es:[2027,6,21],  ef:[2027,8,17],  tf:592,  crit:false},
+{id:'PG-353',    l:'garage',  n:'Ready for Temp Use ✦',                  es:[2027,7,20],  ef:[2027,7,20],  tf:1672, crit:false},
+{id:'PG-363',    l:'garage',  n:'Barrier Cables',                         es:[2027,7,21],  ef:[2027,8,3],   tf:1672, crit:false},
+{id:'PG-373',    l:'garage',  n:'Pipe Guards / Metals',                   es:[2027,8,4],   ef:[2027,8,10],  tf:1672, crit:false},
+{id:'PG-383',    l:'garage',  n:'Cleaning',                               es:[2027,8,11],  ef:[2027,8,17],  tf:1672, crit:false},
+{id:'ELEV-002',  l:'garage',  n:'Elevator 2 — Garage Passenger',          es:[2027,8,11],  ef:[2027,10,6],  tf:592,  crit:false},
+{id:'PG-393',    l:'garage',  n:'Line Striping',                          es:[2027,8,18],  ef:[2027,8,24],  tf:1672, crit:false},
+{id:'PG-403',    l:'garage',  n:'Signage',                                es:[2027,8,25],  ef:[2027,8,31],  tf:1672, crit:false},
+{id:'PG-413',    l:'garage',  n:'Painting & Room Finishes',               es:[2027,9,1],   ef:[2027,9,15],  tf:1672, crit:false},
+{id:'PG-423',    l:'garage',  n:'Garage Turn-Over ✦',                    es:[2027,9,16],  ef:[2027,9,16],  tf:1672, crit:false},
+// PODIUM (key items)
+{id:'FT-1000',   l:'podium',  n:'Foundations FA4-1',                      es:[2026,10,15], ef:[2026,11,3],  tf:160,  crit:false},
+{id:'UG-1080',   l:'podium',  n:'UG Rough-In FA4-1',                      es:[2026,11,4],  ef:[2026,11,17], tf:448,  crit:false},
+{id:'SOG-1150',  l:'podium',  n:'SOG FA4-1 Amenity',                      es:[2026,11,18], ef:[2026,12,7],  tf:448,  crit:false},
+{id:'POD-1300',  l:'podium',  n:'Columns & Walls',                        es:[2026,12,8],  ef:[2027,1,5],   tf:448,  crit:false},
+{id:'POD-1310',  l:'podium',  n:'Elevated Slab 2F',                       es:[2027,4,9],   ef:[2027,4,22],  tf:16,   crit:false},
+{id:'CMU-1140',  l:'podium',  n:'Stair 7 CMU Shaft',                      es:[2027,4,23],  ef:[2027,6,4],   tf:16,   crit:false},
+{id:'POD-1320',  l:'podium',  n:'Podium Topped Out ✦',                   es:[2027,4,23],  ef:[2027,4,23],  tf:176,  crit:false},
+{id:'UF-1220',   l:'podium',  n:'2F Walls + 3F Trusses FA4-1',            es:[2027,6,7],   ef:[2027,6,18],  tf:16,   crit:false},
+{id:'UF-1320',   l:'podium',  n:'3F Walls + 4F Trusses FA4-1',            es:[2027,6,21],  ef:[2027,7,8],   tf:16,   crit:false},
+{id:'UF-1420',   l:'podium',  n:'4F Walls + 5F Trusses FA4-1',            es:[2027,7,9],   ef:[2027,7,22],  tf:16,   crit:false},
+{id:'UF-1520',   l:'podium',  n:'5F Walls + Roof Trusses FA4-1',          es:[2027,7,23],  ef:[2027,8,10],  tf:16,   crit:false},
+{id:'UF-1620',   l:'podium',  n:'Roof Sheathing FA4-1',                   es:[2027,8,11],  ef:[2027,8,24],  tf:16,   crit:false},
+{id:'ELEV-004',  l:'podium',  n:'Elevator 4 — Amenity',                   es:[2027,10,7],  ef:[2027,12,1],  tf:592,  crit:false},
+{id:'A8270',     l:'podium',  n:'Amenity Build-Out',                       es:[2027,6,21],  ef:[2028,3,6],   tf:560,  crit:false},
+// FA2 (key items - critical chain)
+{id:'FT-1020',   l:'fa2',     n:'Foundations FA2',                        es:[2026,12,10], ef:[2027,1,7],   tf:0,    crit:true},
+{id:'UG-1100',   l:'fa2',     n:'UG Rough-In FA2',                        es:[2027,1,8],   ef:[2027,2,3],   tf:0,    crit:true},
+{id:'SOG-1170',  l:'fa2',     n:'SOG FA2',                                es:[2027,1,22],  ef:[2027,2,17],  tf:0,    crit:true},
+{id:'UF-2140',   l:'fa2',     n:'1F Walls + 2F Trusses FA2',              es:[2027,2,18],  ef:[2027,3,17],  tf:0,    crit:true},
+{id:'UF-2240',   l:'fa2',     n:'2F Walls + 3F Trusses FA2',              es:[2027,3,18],  ef:[2027,4,13],  tf:0,    crit:true},
+{id:'UF-2340',   l:'fa2',     n:'3F Walls + 4F Trusses FA2',              es:[2027,4,14],  ef:[2027,5,11],  tf:0,    crit:true},
+{id:'UF-2440',   l:'fa2',     n:'4F Walls + Roof Trusses FA2',            es:[2027,5,12],  ef:[2027,6,9],   tf:0,    crit:true},
+{id:'UF-2540',   l:'fa2',     n:'Roof Sheathing FA2',                     es:[2027,6,10],  ef:[2027,7,6],   tf:0,    crit:true},
+{id:'ROOF-2000', l:'fa2',     n:'Roofing Vapor Barrier FA2',              es:[2027,7,7],   ef:[2027,7,13],  tf:0,    crit:true},
+{id:'MEP-2120',  l:'fa2',     n:'MEP Rough-In 1F FA2',                    es:[2027,7,14],  ef:[2027,7,27],  tf:0,    crit:true},
+{id:'MEP-2420',  l:'fa2',     n:'MEP Rough-In 4F FA2',                    es:[2027,7,28],  ef:[2027,8,10],  tf:0,    crit:true},
+{id:'UNIT-2400', l:'fa2',     n:'Insulation Insp 4F FA2',                 es:[2027,8,11],  ef:[2027,8,17],  tf:0,    crit:true},
+{id:'UNIT-2405', l:'fa2',     n:'Board Tape Sand 4F FA2',                 es:[2027,8,18],  ef:[2027,9,8],   tf:0,    crit:true},
+{id:'UNIT-2410', l:'fa2',     n:'Prime Paint 4F FA2',                     es:[2027,9,9],   ef:[2027,9,13],  tf:0,    crit:true},
+{id:'UNIT-2413', l:'fa2',     n:'Level Rock 4F FA2',                      es:[2027,9,14],  ef:[2027,9,16],  tf:0,    crit:true},
+{id:'UNIT-2415', l:'fa2',     n:'Cabinets 4F FA2',                        es:[2027,10,1],  ef:[2027,10,12], tf:0,    crit:true},
+{id:'UNIT-2420', l:'fa2',     n:'Prehung Doors 4F FA2',                   es:[2027,10,13], ef:[2027,10,22], tf:0,    crit:true},
+{id:'UNIT-2425', l:'fa2',     n:'Tile 4F FA2',                            es:[2027,10,25], ef:[2027,11,5],  tf:0,    crit:true},
+{id:'UNIT-2430', l:'fa2',     n:'Countertops 4F FA2',                     es:[2027,11,8],  ef:[2027,11,17], tf:0,    crit:true},
+{id:'UNIT-2435', l:'fa2',     n:'1st Point Up 4F FA2',                    es:[2027,11,18], ef:[2027,12,1],  tf:0,    crit:true},
+{id:'UNIT-2440', l:'fa2',     n:'Finish Paint 4F FA2',                    es:[2027,12,2],  ef:[2027,12,13], tf:0,    crit:true},
+{id:'UNIT-2445', l:'fa2',     n:'Rough Clean 4F FA2',                     es:[2027,12,14], ef:[2027,12,15], tf:0,    crit:true},
+{id:'UNIT-2450', l:'fa2',     n:'Flooring 4F FA2',                        es:[2027,12,16], ef:[2027,12,28], tf:0,    crit:true},
+{id:'UNIT-2455', l:'fa2',     n:'MEP Finishes 4F FA2',                    es:[2027,12,29], ef:[2028,1,10],  tf:0,    crit:true},
+// FA3 (key)
+{id:'FT-1050',   l:'fa3',     n:'Foundations FA3',                        es:[2027,3,15],  ef:[2027,4,22],  tf:16,   crit:false},
+{id:'UF-3150',   l:'fa3',     n:'1F Walls + 2F Trusses FA3',              es:[2027,4,19],  ef:[2027,5,14],  tf:16,   crit:false},
+{id:'UF-3250',   l:'fa3',     n:'2F Walls + 3F Trusses FA3',              es:[2027,5,17],  ef:[2027,6,14],  tf:16,   crit:false},
+{id:'UF-3350',   l:'fa3',     n:'3F Walls + 4F Trusses FA3',              es:[2027,6,15],  ef:[2027,7,9],   tf:16,   crit:false},
+{id:'UF-3450',   l:'fa3',     n:'4F Walls + Roof Trusses FA3',            es:[2027,7,12],  ef:[2027,8,4],   tf:16,   crit:false},
+{id:'UF-3550',   l:'fa3',     n:'Roof Sheathing FA3',                     es:[2027,8,5],   ef:[2027,8,25],  tf:16,   crit:false},
+{id:'MEP-3120',  l:'fa3',     n:'MEP Rough-In 1F FA3',                    es:[2027,9,2],   ef:[2027,9,15],  tf:40,   crit:false},
+{id:'ROOF-3000', l:'fa3',     n:'Roofing Vapor Barrier FA3',              es:[2027,8,26],  ef:[2027,9,1],   tf:40,   crit:false},
+// FA4-2 (key)
+{id:'FT-1060',   l:'fa42',    n:'Foundations FA4-2',                      es:[2027,4,23],  ef:[2027,5,13],  tf:736,  crit:false},
+{id:'UF-4170',   l:'fa42',    n:'1F Walls + 2F Trusses FA4-2',            es:[2027,8,26],  ef:[2027,9,10],  tf:368,  crit:false},
+{id:'UF-4270',   l:'fa42',    n:'2F Walls + 3F Trusses FA4-2',            es:[2027,9,13],  ef:[2027,9,22],  tf:368,  crit:false},
+{id:'UF-4370',   l:'fa42',    n:'3F Walls + 4F Trusses FA4-2',            es:[2027,9,23],  ef:[2027,10,6],  tf:368,  crit:false},
+{id:'UF-4470',   l:'fa42',    n:'4F Walls + Roof Trusses FA4-2',          es:[2027,10,7],  ef:[2027,10,18], tf:368,  crit:false},
+{id:'UF-4570',   l:'fa42',    n:'Roof Sheathing FA4-2',                   es:[2027,10,19], ef:[2027,11,3],  tf:368,  crit:false},
+{id:'ROOF-4000', l:'fa42',    n:'Roofing Vapor Barrier FA4-2',            es:[2027,11,4],  ef:[2027,11,10], tf:1032, crit:false},
+// EXTERIOR
+{id:'WIN-1570',  l:'exterior',n:'Windows FA4-1',                          es:[2027,9,1],   ef:[2027,9,15],  tf:16,   crit:false},
+{id:'BRK-1610',  l:'exterior',n:'Masonry FA4-1',                          es:[2027,9,9],   ef:[2027,10,22], tf:16,   crit:false},
+{id:'WIN-1580',  l:'exterior',n:'Windows FA2',                            es:[2027,9,16],  ef:[2027,10,8],  tf:400,  crit:false},
+{id:'ROOF-5500', l:'exterior',n:'Roofing Vapor Barrier FA4-1',            es:[2027,8,25],  ef:[2027,8,31],  tf:16,   crit:false},
+{id:'BRK-1620',  l:'exterior',n:'Masonry FA2',                            es:[2027,10,25], ef:[2027,12,10], tf:240,  crit:false},
+{id:'SID-1660',  l:'exterior',n:'Siding FA4-1',                           es:[2027,10,25], ef:[2027,12,10], tf:16,   crit:false},
+{id:'WIN-1590',  l:'exterior',n:'Windows FA3',                            es:[2027,11,4],  ef:[2027,12,2],  tf:368,  crit:false},
+{id:'ST-1000',   l:'exterior',n:'Storefront FA4-1 Amenity',               es:[2027,10,25], ef:[2027,12,17], tf:1488, crit:false},
+{id:'SITE-1700', l:'exterior',n:'Pool Construction',                      es:[2027,11,12], ef:[2028,1,24],  tf:16,   crit:false},
+{id:'WIN-1600',  l:'exterior',n:'Windows FA4-2',                          es:[2027,12,3],  ef:[2027,12,16], tf:488,  crit:false},
+{id:'NCL-1140',  l:'exterior',n:'Re-grade Site (Grocer)',                 es:[2027,12,13], ef:[2028,1,3],   tf:408,  crit:false},
+{id:'BRK-1630',  l:'exterior',n:'Masonry FA3',                            es:[2027,12,13], ef:[2028,1,24],  tf:240,  crit:false},
+{id:'SID-1670',  l:'exterior',n:'Siding FA2',                             es:[2027,12,13], ef:[2028,1,24],  tf:240,  crit:false},
+];
+
+const ACTS = [...ACTS_OVERALL, ...ACTS_MF];
+
+// Critical-path arrows (MF Rev 02 — preserved from existing)
 const RELS = [
-  // Critical chain: Site → Garage → FA2 framing
-  {f:'SITE-04',   t:'SITE-14',   c:true},  {f:'SITE-14',  t:'SITE-24',  c:true},
-  {f:'SITE-24',   t:'SITE-34',   c:true},  {f:'SITE-34',  t:'PG-301A',  c:true},
-  {f:'PG-301A',   t:'PG-301B',   c:true},  {f:'PG-301B',  t:'FT-1020',  c:true},
-  {f:'FT-1020',   t:'UG-1100',   c:true},  {f:'UG-1100',  t:'SOG-1170', c:true},
-  {f:'SOG-1170',  t:'UF-2140',   c:true},  {f:'UF-2140',  t:'UF-2240',  c:true},
-  {f:'UF-2240',   t:'UF-2340',   c:true},  {f:'UF-2340',  t:'UF-2440',  c:true},
-  {f:'UF-2440',   t:'UF-2540',   c:true},  {f:'UF-2540',  t:'ROOF-2000',c:true},
-  {f:'ROOF-2000', t:'MEP-2120',  c:true},  {f:'MEP-2120', t:'MEP-2420', c:true},
-  {f:'MEP-2420',  t:'UNIT-2400', c:true},  {f:'UNIT-2400',t:'UNIT-2405',c:true},
-  {f:'UNIT-2405', t:'UNIT-2410', c:true},  {f:'UNIT-2410',t:'UNIT-2413',c:true},
-  {f:'UNIT-2413', t:'UNIT-2415', c:true},  {f:'UNIT-2415',t:'UNIT-2420',c:true},
-  {f:'UNIT-2420', t:'UNIT-2425', c:true},  {f:'UNIT-2425',t:'UNIT-2430',c:true},
-  {f:'UNIT-2430', t:'UNIT-2435', c:true},  {f:'UNIT-2435',t:'UNIT-2440',c:true},
-  {f:'UNIT-2440', t:'UNIT-2445', c:true},  {f:'UNIT-2445',t:'UNIT-2450',c:true},
-  {f:'UNIT-2450', t:'UNIT-2455', c:true},
-  // Garage retaining wall chain (near-crit TF:16)
-  {f:'PG-301B',   t:'PG-301C',   c:false}, {f:'PG-301C',  t:'PG-301D',  c:false},
-  {f:'PG-301D',   t:'PG-301E',   c:false}, {f:'PG-301E',  t:'PG-302',   c:false},
-  {f:'PG-302',    t:'PG-303',    c:false},
-  // Garage finish chain
-  {f:'PG-303',    t:'PG-313',    c:false}, {f:'PG-313',   t:'PG-323',   c:false},
-  {f:'PG-323',    t:'PG-343',    c:false}, {f:'PG-343',   t:'PG-353',   c:false},
-  {f:'PG-353',    t:'PG-363',    c:false}, {f:'PG-363',   t:'PG-373',   c:false},
-  {f:'PG-373',    t:'PG-383',    c:false}, {f:'PG-383',   t:'PG-393',   c:false},
-  {f:'PG-393',    t:'PG-403',    c:false}, {f:'PG-403',   t:'PG-413',   c:false},
-  {f:'PG-413',    t:'PG-423',    c:false},
-  // Precast fab → erection
-  {f:'PRE-3150',  t:'PG-303',    c:false},
-  // Podium framing chain (TF:16)
-  {f:'PG-303',    t:'POD-1310',  c:false}, {f:'POD-1310', t:'POD-1320', c:false},
-  {f:'POD-1320',  t:'UF-1220',   c:false}, {f:'UF-1220',  t:'UF-1320',  c:false},
-  {f:'UF-1320',   t:'UF-1420',   c:false}, {f:'UF-1420',  t:'UF-1520',  c:false},
-  {f:'UF-1520',   t:'UF-1620',   c:false},
-  // FA3 framing chain (TF:16)
-  {f:'UF-2240',   t:'UF-3150',   c:false}, {f:'UF-3150',  t:'UF-3250',  c:false},
-  {f:'UF-3250',   t:'UF-3350',   c:false}, {f:'UF-3350',  t:'UF-3450',  c:false},
-  {f:'UF-3450',   t:'UF-3550',   c:false}, {f:'UF-3550',  t:'ROOF-3000',c:false},
-  // FA4-2 framing chain (TF:368)
-  {f:'UF-3550',   t:'UF-4170',   c:false}, {f:'UF-4170',  t:'UF-4270',  c:false},
-  {f:'UF-4270',   t:'UF-4370',   c:false}, {f:'UF-4370',  t:'UF-4470',  c:false},
-  {f:'UF-4470',   t:'UF-4570',   c:false}, {f:'UF-4570',  t:'ROOF-4000',c:false},
-  // Foundations chain
-  {f:'PG-301A',   t:'FT-1000',   c:false}, {f:'FT-1000',  t:'FT-1020',  c:false},
-  {f:'FT-1020',   t:'FT-1050',   c:false}, {f:'FT-1050',  t:'FT-1060',  c:false},
-  // Exterior sequence
-  {f:'UF-1620',   t:'ROOF-5500', c:false}, {f:'ROOF-5500',t:'WIN-1570', c:false},
-  {f:'WIN-1570',  t:'BRK-1610',  c:false}, {f:'ROOF-2000',t:'WIN-1580', c:false},
-  {f:'WIN-1580',  t:'BRK-1620',  c:false}, {f:'ROOF-3000',t:'WIN-1590', c:false},
-  {f:'WIN-1590',  t:'BRK-1630',  c:false}, {f:'BRK-1610', t:'SID-1660', c:false},
-  {f:'BRK-1620',  t:'SID-1670',  c:false}, {f:'BRK-1610', t:'BRK-1620', c:false},
-  {f:'BRK-1620',  t:'BRK-1630',  c:false},
-  // MEP rough-ins FA2
-  {f:'ROOF-2000', t:'MEP-2120',  c:true},
+  {f:'SITE-04',  t:'SITE-14',  c:true},{f:'SITE-14', t:'SITE-24', c:true},{f:'SITE-24',t:'SITE-34',c:true},
+  {f:'SITE-34',  t:'PG-301A',  c:true},{f:'PG-301A', t:'PG-301B', c:true},{f:'PG-301B',t:'FT-1020',c:true},
+  {f:'FT-1020',  t:'UG-1100',  c:true},{f:'UG-1100', t:'SOG-1170',c:true},{f:'SOG-1170',t:'UF-2140',c:true},
+  {f:'UF-2140',  t:'UF-2240',  c:true},{f:'UF-2240', t:'UF-2340', c:true},{f:'UF-2340',t:'UF-2440',c:true},
+  {f:'UF-2440',  t:'UF-2540',  c:true},{f:'UF-2540', t:'ROOF-2000',c:true},{f:'ROOF-2000',t:'MEP-2120',c:true},
+  {f:'MEP-2120', t:'MEP-2420', c:true},{f:'MEP-2420',t:'UNIT-2400',c:true},{f:'UNIT-2400',t:'UNIT-2405',c:true},
+  {f:'UNIT-2405',t:'UNIT-2410',c:true},{f:'UNIT-2410',t:'UNIT-2413',c:true},{f:'UNIT-2413',t:'UNIT-2415',c:true},
+  {f:'UNIT-2415',t:'UNIT-2420',c:true},{f:'UNIT-2420',t:'UNIT-2425',c:true},{f:'UNIT-2425',t:'UNIT-2430',c:true},
+  {f:'UNIT-2430',t:'UNIT-2435',c:true},{f:'UNIT-2435',t:'UNIT-2440',c:true},{f:'UNIT-2440',t:'UNIT-2445',c:true},
+  {f:'UNIT-2445',t:'UNIT-2450',c:true},{f:'UNIT-2450',t:'UNIT-2455',c:true},
+  // Garage
+  {f:'PG-301B',t:'PG-301C',c:false},{f:'PG-301C',t:'PG-301D',c:false},{f:'PG-301D',t:'PG-301E',c:false},
+  {f:'PG-301E',t:'PG-302',c:false},{f:'PG-302',t:'PG-303',c:false},{f:'PG-303',t:'PG-313',c:false},
+  {f:'PG-313',t:'PG-323',c:false},{f:'PG-323',t:'PG-343',c:false},{f:'PG-343',t:'PG-353',c:false},
+  {f:'PRE-3150',t:'PG-303',c:false},
+  // Podium
+  {f:'PG-303',t:'POD-1310',c:false},{f:'POD-1310',t:'POD-1320',c:false},{f:'POD-1320',t:'UF-1220',c:false},
+  {f:'UF-1220',t:'UF-1320',c:false},{f:'UF-1320',t:'UF-1420',c:false},{f:'UF-1420',t:'UF-1520',c:false},
+  {f:'UF-1520',t:'UF-1620',c:false},
+  // FA3 framing
+  {f:'UF-2240',t:'UF-3150',c:false},{f:'UF-3150',t:'UF-3250',c:false},{f:'UF-3250',t:'UF-3350',c:false},
+  {f:'UF-3350',t:'UF-3450',c:false},{f:'UF-3450',t:'UF-3550',c:false},{f:'UF-3550',t:'ROOF-3000',c:false},
+  // FA4-2 framing
+  {f:'UF-3550',t:'UF-4170',c:false},{f:'UF-4170',t:'UF-4270',c:false},{f:'UF-4270',t:'UF-4370',c:false},
+  {f:'UF-4370',t:'UF-4470',c:false},{f:'UF-4470',t:'UF-4570',c:false},{f:'UF-4570',t:'ROOF-4000',c:false},
+  // Foundations
+  {f:'PG-301A',t:'FT-1000',c:false},{f:'FT-1000',t:'FT-1020',c:false},{f:'FT-1020',t:'FT-1050',c:false},
+  {f:'FT-1050',t:'FT-1060',c:false},
+  // Exterior
+  {f:'UF-1620',t:'ROOF-5500',c:false},{f:'ROOF-5500',t:'WIN-1570',c:false},{f:'WIN-1570',t:'BRK-1610',c:false},
+  {f:'ROOF-2000',t:'WIN-1580',c:false},{f:'WIN-1580',t:'BRK-1620',c:false},
+  {f:'ROOF-3000',t:'WIN-1590',c:false},{f:'WIN-1590',t:'BRK-1630',c:false},
+  {f:'BRK-1610',t:'SID-1660',c:false},{f:'BRK-1620',t:'SID-1670',c:false},
+  {f:'BRK-1610',t:'BRK-1620',c:false},{f:'BRK-1620',t:'BRK-1630',c:false},
   // Site utilities
-  {f:'SITE-24',   t:'SU-1000',   c:false}, {f:'SU-1000',  t:'SU-1010',  c:false},
-  {f:'SU-1010',   t:'SU-1020',   c:false}, {f:'SU-1020',  t:'SU-1030',  c:false},
-  {f:'SU-1030',   t:'SU-1040',   c:false}, {f:'SU-1040',  t:'SU-1050',  c:false},
-  // Elevators
-  {f:'PG-303',    t:'ELEV-001',  c:false}, {f:'ELEV-001', t:'ELEV-002', c:false},
-  {f:'ELEV-002',  t:'ELEV-004',  c:false}, {f:'ELEV-004', t:'ELEV-003', c:false},
-  // Podium MEP
-  {f:'UF-1420',   t:'MEP-1200',  c:false}, {f:'MEP-1200', t:'MEP-1300', c:false},
-  {f:'MEP-1300',  t:'MEP-1400',  c:false}, {f:'MEP-1400', t:'MEP-1500', c:false},
-  // Unit interior sequencing (FA2 floors)
-  {f:'MEP-2120',  t:'UNIT-2100', c:false}, {f:'UNIT-2100',t:'UNIT-3100',c:false},
-  {f:'UNIT-2100', t:'UNIT-2400', c:true},  {f:'UNIT-2400',t:'UNIT-2300',c:false},
-  {f:'UNIT-2300', t:'UNIT-2200', c:false},
-  // MEP rough-in cascade FA2
-  {f:'MEP-2120',  t:'MEP-2420',  c:true},  {f:'MEP-2420', t:'MEP-2320', c:false},
-  {f:'MEP-2320',  t:'MEP-2220',  c:false},
-  // FA3 MEP rough-ins
-  {f:'ROOF-3000', t:'MEP-3120',  c:false}, {f:'MEP-3120', t:'MEP-3420', c:false},
-  // FA4-2 MEP rough-ins
-  {f:'ROOF-4000', t:'MEP-4420',  c:false}, {f:'MEP-4420', t:'MEP-4320', c:false},
-  {f:'MEP-4320',  t:'MEP-4220',  c:false}, {f:'MEP-4220', t:'MEP-4120', c:false},
-  // FA3 unit interiors
-  {f:'MEP-3420',  t:'UNIT-3400', c:false}, {f:'UNIT-3400',t:'UNIT-3300',c:false},
-  {f:'UNIT-3300', t:'UNIT-3200', c:false},
-  // POD MEP → units
-  {f:'ROOF-5500', t:'MEP-1520',  c:false}, {f:'MEP-1520', t:'UNIT-1500',c:false},
-  {f:'UNIT-1500', t:'UNIT-1400', c:false}, {f:'UNIT-1400',t:'UNIT-1300',c:false},
-  {f:'UNIT-1300', t:'UNIT-1200', c:false},
-  // POD amenity placeholder
-  {f:'POD-1320',  t:'A8270',     c:false},
-  // Siding → NCL site work
-  {f:'SID-1660',  t:'NCL-1140',  c:false},
-  // Pool follows siding
-  {f:'SID-1660',  t:'SITE-1700', c:false},
+  {f:'SITE-24',t:'SU-1000',c:false},{f:'SU-1000',t:'SU-1010',c:false},{f:'SU-1010',t:'SU-1020',c:false},
+  {f:'SU-1020',t:'SU-1030',c:false},{f:'SU-1030',t:'SU-1040',c:false},{f:'SU-1040',t:'SU-1050',c:false},
+  // Overall cross-links (Infra → MF site)
+  {f:'113',t:'SITE-04',c:false},
+  {f:'206',t:'PG-301A',c:false},
 ];
 
 // ─────────────────────────────────────────────────────────────────
@@ -669,7 +627,6 @@ function aW(es,ef){
   const d = Math.max(1,(new Date(ef[0],ef[1]-1,ef[2]) - new Date(es[0],es[1]-1,es[2]))/86400000 + 1);
   return Math.max(50, Math.round(d / 30.44 * MO_W));
 }
-
 function buildRows(laneId){
   const acts = ACTS.filter(a => a.l === laneId)
     .sort((a,b) => new Date(a.es[0],a.es[1]-1,a.es[2]) - new Date(b.es[0],b.es[1]-1,b.es[2]));
@@ -701,17 +658,35 @@ const asvg   = document.getElementById('asvg');
 const cor = document.createElement('div'); cor.className='mo-corner'; moRow.appendChild(cor);
 MONTHS.forEach(mo => {
   const c = document.createElement('div');
-  c.className = 'mo-cell' + (CRIT_MOS.has(mo.l) ? ' crit-mo' : '');
+  c.className = 'mo-cell' + (CRIT_MOS.has(mo.l) ? ' crit-mo' : '') + (OVRL_MOS.has(mo.l) ? ' overall-mo' : '');
   c.textContent = mo.l;
   moRow.appendChild(c);
 });
 
+// Section separator helper
+function addSep(text){
+  const sep = document.createElement('div');
+  sep.className = 'section-sep';
+  sep.style.width = (HDR_W + totalW) + 'px';
+  sep.textContent = text;
+  lanesEl.appendChild(sep);
+  cumTop += 22;
+}
+
 const laneLayouts = {};
 const laneTopMap  = {};
-const actDOM      = {}; // id → {el,x1,x2,xc,yc,y1,y2,lane}
+const actDOM      = {};
 let cumTop = MO_HDR;
 
+// Build a section separator before first MF lane
+let firstMF = true;
+
 LANE_DEFS.forEach(lane => {
+  if(firstMF && lane.group === 'mf'){
+    addSep('── Multi-Family Building Rev 02 ─────────────────────────────────────────────────');
+    firstMF = false;
+  }
+
   const lay = buildRows(lane.id);
   laneLayouts[lane.id] = lay;
   const lh = lay.rowCount * (ACT_H + RPAD) + RPAD * 2;
@@ -723,9 +698,13 @@ LANE_DEFS.forEach(lane => {
   laneEl.dataset.lid = lane.id;
   laneEl.style.minHeight = lh + 'px';
   laneEl.style.borderLeft = `3px solid ${lane.color}`;
+  if(lane.group === 'overall') laneEl.style.borderLeftStyle = 'dashed';
 
   const lbl = document.createElement('div'); lbl.className = 'lane-lbl';
-  lbl.innerHTML = `<div class="ln" style="color:${lane.color}">${lane.name}</div><div class="ls">${lane.sub}</div>`;
+  const grpTag = lane.group === 'overall'
+    ? `<div style="font-size:8px;color:var(--c-infra);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;opacity:.6;margin-bottom:2px">OVERALL</div>`
+    : '';
+  lbl.innerHTML = `${grpTag}<div class="ln" style="color:${lane.color}">${lane.name}</div><div class="ls">${lane.sub}</div>`;
   laneEl.appendChild(lbl);
 
   const body = document.createElement('div');
@@ -738,6 +717,32 @@ LANE_DEFS.forEach(lane => {
   lay.placed.forEach(({a,x,w,row}) => {
     const y   = RPAD + row * (ACT_H + RPAD);
     const col = lane.color;
+
+    // Milestone diamond rendering
+    if(a.mstone){
+      const ms = document.createElement('div');
+      ms.className = 'mstone';
+      ms.id = 'act-' + a.id.replace(/[^a-zA-Z0-9_-]/g,'_');
+      const mx = x + Math.min(w, 50)/2;
+      ms.style.cssText = `left:${mx-6}px;top:${y+16}px;background:color-mix(in srgb,${col} 25%,var(--bg3));border-color:${col};`;
+      ms.addEventListener('mouseenter', e => showTip(e,a,col));
+      ms.addEventListener('mousemove',  e => moveTip(e));
+      ms.addEventListener('mouseleave', hideTip);
+
+      const ml = document.createElement('div');
+      ml.className = 'mstone-lbl';
+      ml.style.cssText = `left:${mx}px;top:${y+30}px;color:${col};`;
+      ml.textContent = a.id;
+      body.appendChild(ms);
+      body.appendChild(ml);
+
+      actDOM[a.id] = {
+        el:ms, lid:lane.id, x1:HDR_W+mx-6, x2:HDR_W+mx+6,
+        xc:HDR_W+mx, yc:laneTopMap[lane.id]+y+22, y1:laneTopMap[lane.id]+y, y2:laneTopMap[lane.id]+y+ACT_H
+      };
+      return;
+    }
+
     const bg  = a.crit
       ? `color-mix(in srgb, ${col} 20%, var(--bg3))`
       : `color-mix(in srgb, ${col}  8%, var(--bg2))`;
@@ -747,43 +752,91 @@ LANE_DEFS.forEach(lane => {
 
     const el = document.createElement('div');
     el.className = 'act' + (a.crit ? ' crit' : '') + (a.done ? ' done' : '');
+    el.id = 'act-' + a.id.replace(/[^a-zA-Z0-9_-]/g,'_');
     el.dataset.id  = a.id;
     el.dataset.lid = lane.id;
     el.style.cssText = `left:${x}px;top:${y}px;width:${w}px;height:${ACT_H}px;background:${bg};border-color:${bc};`;
     if(a.crit) el.style.borderLeftColor = col;
+    if(a.src === 'Overall') el.style.borderStyle = 'dashed';
 
     const f = arr => `${String(arr[1]).padStart(2,'0')}/${String(arr[2]).padStart(2,'0')}`;
-    const tfd = Math.round(a.tf / 8);
+    const schSrc = a.src ? ` · ${a.src}` : '';
     el.innerHTML = `
       <div class="ac" style="color:${col}">${a.id}</div>
       <div class="an">${a.n}</div>
-      <div class="ad">${f(a.es)} → ${f(a.ef)}</div>`;
+      <div class="ad">${f(a.es)} → ${f(a.ef)}${schSrc}</div>`;
 
     el.addEventListener('mouseenter', e => showTip(e,a,col));
     el.addEventListener('mousemove',  e => moveTip(e));
     el.addEventListener('mouseleave', hideTip);
     body.appendChild(el);
 
-    // Store positions for arrow routing
     const absTop = laneTopMap[lane.id] + y;
     actDOM[a.id] = {
-      el, lid: lane.id,
-      x1: HDR_W + x,       x2: HDR_W + x + w,
-      xc: HDR_W + x + w/2, yc: absTop + ACT_H/2,
-      y1: absTop,           y2: absTop + ACT_H,
+      el, lid:lane.id,
+      x1:HDR_W+x, x2:HDR_W+x+w,
+      xc:HDR_W+x+w/2, yc:absTop+ACT_H/2,
+      y1:absTop, y2:absTop+ACT_H,
     };
   });
 });
 
-// Today line
-const todayX = HDR_W + dX(2026,4,1); // Data date Apr 1 2026
+// ─────────────────────────────────────────────────────────────────
+// MFB OVERLAY PINS — draw vertical dashed lines over MF lanes
+// ─────────────────────────────────────────────────────────────────
+let showPins = true;
+const pinEls = [];
+
+function buildPins(){
+  pinEls.forEach(p => p.remove());
+  pinEls.length = 0;
+  if(!showPins) return;
+
+  // Find top of first MF lane and bottom of last MF lane
+  const mfLanes = LANE_DEFS.filter(l => l.group === 'mf');
+  if(!mfLanes.length) return;
+  const pinTop  = laneTopMap[mfLanes[0].id];
+  const lastMF  = mfLanes[mfLanes.length-1];
+  const lastLay = laneLayouts[lastMF.id];
+  const pinBot  = laneTopMap[lastMF.id] + lastLay.rowCount * (ACT_H + RPAD) + RPAD * 2;
+  const pinH    = pinBot - pinTop;
+
+  MFB_PINS.forEach(p => {
+    const px = dX(...p.d);
+    if(px < 0 || px > totalW) return;
+
+    const pin = document.createElement('div');
+    pin.className = 'pin-overlay';
+    pin.style.cssText = `left:${HDR_W + px}px;top:${pinTop}px;height:${pinH}px;`;
+
+    const lbl = document.createElement('div');
+    lbl.className = 'pin-lbl';
+    lbl.textContent = p.id;
+    pin.appendChild(lbl);
+
+    lanesEl.appendChild(pin);
+    pinEls.push(pin);
+  });
+}
+setTimeout(buildPins, 50);
+
+function togglePins(){
+  showPins = !showPins;
+  document.getElementById('pinsBtn').textContent = 'MFB Pins ' + (showPins ? 'ON' : 'OFF');
+  document.getElementById('pinsBtn').classList.toggle('on', !showPins);
+  buildPins();
+}
+
+// ─────────────────────────────────────────────────────────────────
+// TODAY / DATA DATE LINE
+// ─────────────────────────────────────────────────────────────────
+const todayX = HDR_W + dX(2026,4,9); // Data date Apr 9 2026
 const tl = document.createElement('div'); tl.className='today-line';
 tl.style.left = todayX + 'px'; tl.style.height = cumTop + 'px';
 const tlbl = document.createElement('div'); tlbl.className='today-lbl';
 tlbl.style.left = todayX + 'px'; tlbl.style.top = MO_HDR + 'px';
-tlbl.textContent = 'Apr 1, 2026'; 
-document.getElementById('lanesEl').appendChild(tl);
-document.getElementById('lanesEl').appendChild(tlbl);
+tlbl.textContent = 'Data Apr 9, 2026';
+lanesEl.appendChild(tl); lanesEl.appendChild(tlbl);
 
 asvg.style.width  = (HDR_W + totalW) + 'px';
 asvg.style.height = cumTop + 'px';
@@ -809,23 +862,14 @@ function drawArrows(){
     const marker = r.c ? 'mc' : 'mn';
 
     let d;
-    if(Math.abs(y1-y2) < 6 && x2 > x1+4){
-      d = `M${x1} ${y1} L${x2} ${y2}`;
-    } else if(x2 > x1){
-      const dx = x2 - x1;
-      d = `M${x1} ${y1} C${x1+dx*.4} ${y1} ${x2-dx*.4} ${y2} ${x2} ${y2}`;
-    } else {
-      const my = Math.min(y1,y2) - 14;
-      d = `M${x1} ${y1} L${x1+12} ${y1} L${x1+12} ${my} L${x2-12} ${my} L${x2-12} ${y2} L${x2} ${y2}`;
-    }
+    if(Math.abs(y1-y2) < 6 && x2 > x1+4){ d = `M${x1} ${y1} L${x2} ${y2}`; }
+    else if(x2 > x1){ const dx=x2-x1; d=`M${x1} ${y1} C${x1+dx*.4} ${y1} ${x2-dx*.4} ${y2} ${x2} ${y2}`; }
+    else { const my=Math.min(y1,y2)-14; d=`M${x1} ${y1} L${x1+12} ${y1} L${x1+12} ${my} L${x2-12} ${my} L${x2-12} ${y2} L${x2} ${y2}`; }
 
     const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-    path.setAttribute('d', d);
-    path.setAttribute('fill', 'none');
-    path.setAttribute('stroke', stroke);
-    path.setAttribute('stroke-width', sw);
-    path.setAttribute('stroke-dasharray', dash);
-    path.setAttribute('marker-end', `url(#${marker})`);
+    path.setAttribute('d', d); path.setAttribute('fill','none');
+    path.setAttribute('stroke', stroke); path.setAttribute('stroke-width', sw);
+    path.setAttribute('stroke-dasharray', dash); path.setAttribute('marker-end', `url(#${marker})`);
     asvg.appendChild(path);
   });
 }
@@ -838,16 +882,12 @@ let activeLanes = new Set(LANE_DEFS.map(l => l.id));
 
 function toggleLane(el){
   const lid = el.dataset.l;
-  if(activeLanes.has(lid)){
-    if(activeLanes.size > 1) activeLanes.delete(lid);
-  } else {
-    activeLanes.add(lid);
-  }
+  if(activeLanes.has(lid)){ if(activeLanes.size > 1) activeLanes.delete(lid); }
+  else { activeLanes.add(lid); }
   el.classList.toggle('on',  activeLanes.has(lid));
   el.classList.toggle('off', !activeLanes.has(lid));
   applyFilter();
 }
-
 function toggleCrit(){
   critOnly = !critOnly;
   const btn = document.getElementById('critBtn');
@@ -855,11 +895,9 @@ function toggleCrit(){
   btn.classList.toggle('on', critOnly);
   applyFilter();
 }
-
 function applyFilter(){
   document.querySelectorAll('.act').forEach(el => {
-    const lid  = el.dataset.lid;
-    const isCr = el.classList.contains('crit');
+    const lid=el.dataset.lid, isCr=el.classList.contains('crit');
     el.classList.toggle('dimmed', !activeLanes.has(lid) || (critOnly && !isCr));
   });
   document.querySelectorAll('.lane').forEach(el => {
@@ -867,7 +905,6 @@ function applyFilter(){
   });
   setTimeout(drawArrows, 30);
 }
-
 function toggleArr(){
   showArrows = !showArrows;
   const btn = document.getElementById('arrBtn');
@@ -886,58 +923,119 @@ function showTip(e, a, col){
   const fs = arr => `${MN[arr[1]-1]} ${arr[2]}, ${arr[0]}`;
   const days = Math.round((new Date(a.ef[0],a.ef[1]-1,a.ef[2]) - new Date(a.es[0],a.es[1]-1,a.es[2]))/86400000) + 1;
   const tfd = Math.round(a.tf / 8);
+  const negFloat = a.tf < 0 ? ' ⚠ Negative float' : '';
+  const loeTxt = a.loe ? '<div class="tsc">LOE Milestone</div>' : '';
+  const srcTxt = a.src ? `<div class="tsc">Source: ${a.src} schedule</div>` : '';
   tip.innerHTML = `
     <div class="tc" style="color:${col}">${a.id}</div>
     <div class="tn">${a.n}</div>
     <div class="tr"><span>Start</span>  <span class="tv">${fs(a.es)}</span></div>
     <div class="tr"><span>Finish</span> <span class="tv">${fs(a.ef)}</span></div>
     <div class="tr"><span>Duration</span><span class="tv">${days} days</span></div>
-    <div class="tr"><span>Total float</span><span class="${a.crit?'tcr tv':'tv'}">${a.crit ? '● CRITICAL PATH' : tfd + 'd (' + a.tf + 'h)'}</span></div>`;
+    <div class="tr"><span>Total float</span><span class="${a.crit?'tcr tv':'tv'}">${a.crit ? '● CRITICAL PATH' : tfd + 'd (' + a.tf + 'h)' + negFloat}</span></div>
+    ${loeTxt}${srcTxt}`;
   tip.style.display = 'block';
   moveTip(e);
 }
 function moveTip(e){
-  let x = e.clientX+14, y = e.clientY-8;
-  if(x+270 > window.innerWidth)  x = e.clientX - 274;
-  if(y+120 > window.innerHeight) y = e.clientY - 124;
-  tip.style.left = x + 'px'; tip.style.top = y + 'px';
+  let x=e.clientX+14, y=e.clientY-8;
+  if(x+300>window.innerWidth)  x=e.clientX-304;
+  if(y+140>window.innerHeight) y=e.clientY-144;
+  tip.style.left=x+'px'; tip.style.top=y+'px';
 }
-function hideTip(){ tip.style.display = 'none'; }
+function hideTip(){ tip.style.display='none'; }
 
 // ─────────────────────────────────────────────────────────────────
 // ZOOM / PAN
 // ─────────────────────────────────────────────────────────────────
 let scale=1, dragging=false, lx, ly;
-const canvas = document.getElementById('canvas');
-const diag   = document.getElementById('diagram');
+const canvas=document.getElementById('canvas');
+const diag  =document.getElementById('diagram');
 
 function setZ(s){
-  scale = Math.min(2.5, Math.max(0.2, s));
-  diag.style.transform = `scale(${scale})`;
-  diag.style.transformOrigin = '0 0';
-  document.getElementById('zlbl').textContent = Math.round(scale*100) + '%';
-  setTimeout(drawArrows, 55);
+  scale=Math.min(2.5,Math.max(0.2,s));
+  diag.style.transform=`scale(${scale})`;
+  diag.style.transformOrigin='0 0';
+  document.getElementById('zlbl').textContent=Math.round(scale*100)+'%';
+  setTimeout(drawArrows,55);
 }
-function zIn()    { setZ(scale + 0.1); }
-function zOut()   { setZ(scale - 0.1); }
+function zIn()    { setZ(scale+0.1); }
+function zOut()   { setZ(scale-0.1); }
 function zReset() { setZ(1); canvas.scrollLeft=0; canvas.scrollTop=0; }
 
 canvas.addEventListener('mousedown', e => {
-  if(e.target.classList.contains('act')) return;
-  dragging=true; lx=e.clientX; ly=e.clientY;
-  canvas.classList.add('drag');
+  if(e.target.classList.contains('act')||e.target.classList.contains('mstone')) return;
+  dragging=true; lx=e.clientX; ly=e.clientY; canvas.classList.add('drag');
 });
 window.addEventListener('mousemove', e => {
   if(!dragging) return;
-  canvas.scrollLeft -= (e.clientX-lx);
-  canvas.scrollTop  -= (e.clientY-ly);
+  canvas.scrollLeft -= (e.clientX-lx); canvas.scrollTop -= (e.clientY-ly);
   lx=e.clientX; ly=e.clientY;
 });
 window.addEventListener('mouseup', () => { dragging=false; canvas.classList.remove('drag'); });
 canvas.addEventListener('wheel', e => {
-  e.preventDefault();
-  setZ(scale + (e.deltaY > 0 ? -0.07 : 0.07));
-}, {passive: false});
+  e.preventDefault(); setZ(scale+(e.deltaY>0?-0.07:0.07));
+},{passive:false});
+
+// ─────────────────────────────────────────────────────────────────
+// DEEP-LINK HASH HANDLER
+// QR codes encode: https://johncopponi.github.io/brickworks/#ACT-ID
+// On load (and hashchange), find that activity, scroll to it, flash highlight
+// ─────────────────────────────────────────────────────────────────
+function handleHash(){
+  const raw = decodeURIComponent(location.hash.replace('#',''));
+  if(!raw) return;
+  // Try direct element id first (act-CODE), then data-id lookup
+  const safeId = 'act-' + raw.replace(/[^a-zA-Z0-9_-]/g,'_');
+  let el = document.getElementById(safeId);
+  if(!el) el = document.querySelector(`[data-id="${CSS.escape(raw)}"]`);
+  if(!el) return;
+
+  // Ensure the lane is visible
+  const lid = el.dataset.lid;
+  if(lid && !activeLanes.has(lid)){
+    activeLanes.add(lid);
+    const tag = document.querySelector(`.ftag[data-l="${lid}"]`);
+    if(tag){ tag.classList.add('on'); tag.classList.remove('off'); }
+    applyFilter();
+  }
+
+  // Scroll canvas to centre on the element
+  setTimeout(() => {
+    const rect = el.getBoundingClientRect();
+    const canvasRect = canvas.getBoundingClientRect();
+    const targetScrollLeft = canvas.scrollLeft + rect.left - canvasRect.left - canvasRect.width/2 + rect.width/2;
+    const targetScrollTop  = canvas.scrollTop  + rect.top  - canvasRect.top  - canvasRect.height/2 + rect.height/2;
+    canvas.scrollTo({ left: Math.max(0,targetScrollLeft), top: Math.max(0,targetScrollTop), behavior:'smooth' });
+
+    // Flash highlight ring — 3 pulses
+    el.style.transition = 'box-shadow 0.2s';
+    let pulses = 0;
+    const pulse = () => {
+      el.style.boxShadow = pulses%2===0
+        ? '0 0 0 3px rgba(255,255,255,0.9), 0 0 16px rgba(255,255,255,0.5)'
+        : '0 0 0 1px rgba(255,255,255,0.2)';
+      pulses++;
+      if(pulses < 6) setTimeout(pulse, 300);
+      else el.style.boxShadow = '';
+    };
+    pulse();
+
+    // Show tooltip pinned for 4 seconds
+    const actObj = ACTS.find(a => a.id === raw);
+    const laneObj = LANE_DEFS.find(l => l.id === lid);
+    if(actObj && laneObj){
+      const col = laneObj.color;
+      const e2 = { clientX: rect.left + rect.width/2, clientY: rect.top };
+      showTip(e2, actObj, col);
+      setTimeout(hideTip, 4000);
+    }
+  }, 150);
+}
+
+window.addEventListener('hashchange', handleHash);
+// Run after layout settles
+setTimeout(handleHash, 400);
 </script>
 </body>
 </html>
